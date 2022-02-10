@@ -1,0 +1,91 @@
+---
+title: "Document Title"
+author: "Document Author"
+date: "`r format(Sys.time(), '%Y %B %d')`"
+output:
+  html_document:
+    df_print: paged
+params:
+  default_yaml: "yaml/default.yaml"
+  config_yaml: "yaml/default.yaml"
+---
+
+# Pre-analysis
+
+## File Configuration
+
+### Load Packages and Chunk Options
+
+```{r setup, include=FALSE}
+# libraries
+library(tidyverse)
+library(kableExtra)
+library(SLAM)
+library(yaml)
+#setting global knitr options for r markdown output
+knitr::opts_chunk$set(include = FALSE) 
+knitr::opts_chunk$set(warning = FALSE) 
+knitr::opts_chunk$set(message = FALSE) 
+knitr::opts_chunk$set(echo = FALSE) 
+knitr::opts_chunk$set(cache = FALSE) 
+knitr::opts_chunk$set(autodep = TRUE) 
+```
+
+### Create `config`
+
+```{r read in config file}
+# Read in default and config yaml files
+default_yaml <- yaml::read_yaml(file = params$default_yaml)
+config_yaml <- yaml::read_yaml(file = params$config_yaml)
+
+### Create config by replacing defautl_yaml with config_yaml Values
+
+## make config the default yaml
+config <- default_yaml
+
+## if there are values in config_yaml add them to config
+in_config <- names(default_yaml) %in% names(config_yaml)
+config[in_config] <- config_yaml
+
+```
+
+
+## File Utilities
+
+### Render
+
+```{r render, eval=FALSE, include=FALSE, results=FALSE}
+
+```
+
+### Print file parameters
+```{r, include=TRUE}
+names <- names(params)
+param_vec <- unlist(params)
+
+param_df <- data.frame(cbind(names, param_vec))
+if(length(param_df != 0)){
+  names(param_df) <- c("Param Name", "Param Value")
+}
+
+kableExtra::kable(param_df, row.names = FALSE ) %>%
+  kableExtra::kable_classic(full_width = FALSE)
+
+```
+
+### Print config parameters
+```{r, include=TRUE}
+names <- names(config)
+config_vec <- unlist(config)
+
+config_df <- data.frame(cbind(names, config_vec))
+if(length(config_df != 0)){
+  names(config_df) <- c("Config Name", "Config Value")
+}
+
+kableExtra::kable(config_df, row.names = FALSE ) %>%
+  kableExtra::kable_classic(full_width = FALSE)
+
+```
+
+# Analysis

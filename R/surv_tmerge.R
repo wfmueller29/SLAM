@@ -3,10 +3,10 @@
 #' This will take data in long form and create a tmerge dataframe
 #' that can be used in time dependent survival analysis
 #' @param df dataframe in long form for outcome measurements
-#' @param id character string specifying subject in `df`
-#' @param age character string specifying age in `df`
-#' @param age_death character string specifiying age of death in `df`
-#' @param death_censor character string specifying censor in `df`.
+#' @param id character string specifying subject in df
+#' @param age character string specifying age in df
+#' @param age_death character string specifiying age of death in df
+#' @param death_censor character string specifying censor in df.
 #' A death is represented by 1 and censorship is represented by 0
 #' @param outcomes vector or list of strings specifying the outcome variables
 #' at each timepoint

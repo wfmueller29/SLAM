@@ -1,0 +1,1 @@
+hidden file so that data directory will be saved by git and by template even when there is nothing in there
