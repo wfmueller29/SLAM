@@ -4,18 +4,18 @@
 \alias{surv_tmerge}
 \title{Tmerge Long Data}
 \usage{
-surv_tmerge(df, id, age, age_death, death_censor, outcomes)
+surv_tmerge(data, id, age, age_death, death_censor, outcomes)
 }
 \arguments{
-\item{df}{dataframe in long form for outcome measurements}
+\item{data}{dataframe in long form for outcome measurements}
 
-\item{id}{character string specifying subject in df}
+\item{id}{character string specifying subject in data}
 
-\item{age}{character string specifying age in df}
+\item{age}{character string specifying age in data}
 
-\item{age_death}{character string specifiying age of death in df}
+\item{age_death}{character string specifiying age of death in data}
 
-\item{death_censor}{character string specifying censor in df.
+\item{death_censor}{character string specifying censor in data.
 A death is represented by 1 and censorship is represented by 0}
 
 \item{outcomes}{vector or list of strings specifying the outcome variables
@@ -28,6 +28,14 @@ dependent survival analysis
 \description{
 This will take data in long form and create a tmerge dataframe
 that can be used in time dependent survival analysis
+}
+\examples{
+tmerge_delta_surv <- surv_tmerge(data = delta_surv,
+                                 id = "idno",
+                                 age = "age_wk",
+                                 age_death = "lifespan_wk",
+                                 death_censor = "nat_death",
+                                 outcomes = c("blood_age", "bw"))
 }
 \seealso{
 \link[survival]{tmerge}
