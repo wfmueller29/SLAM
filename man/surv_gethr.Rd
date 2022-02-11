@@ -32,8 +32,6 @@ in place of variable name.}
  a character string that has the with names for each variable separated by \\n,
  so that the hazard ratios for vars can be included in a kaplan meier plot.
  }
-
- @export
 }
 \description{
 The purpose of this function is so that the user can easily extract hazard ratios,

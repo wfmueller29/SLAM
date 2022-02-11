@@ -10,7 +10,10 @@ data_SLAM_surv <- read.csv("data-raw/Survival.csv") %>%
                                                    ifelse(cod == "DVR or Pathology", 1,
                                                           ifelse(cod == "Culled Per Vet", 1,0)))))))
 
+
 str(data_SLAM_surv)
 unique(data_SLAM_surv$cod)
+apply(apply(data_SLAM_surv,2,is.na),2,sum)
+
 
 usethis::use_data(data_SLAM_census, overwrite = TRUE)

@@ -26,12 +26,12 @@
 
 
 surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes){
-
   ## Reoder Dataset by Id and Age
-  data_baseline <- data[order(data[[id]], data[[age]]), , drop = FALSE]
+  data_baseline <- data[order(data[[id]], data[[age]]),]
 
   ## take first observation for each id
-  data_baseline <- data[!duplicated(data[[id]]), , drop = FALSE]
+  data_baseline <- data_baseline[!duplicated(data_baseline[[id]]), , drop = FALSE]
+
 
   ## Create call for first tmerge
   event <- call("event", as.symbol(age_death), as.symbol(death_censor))
@@ -71,3 +71,6 @@ surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes){
 
   return(data2)
 }
+
+
+
