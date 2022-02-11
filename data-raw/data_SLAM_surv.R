@@ -16,4 +16,4 @@ unique(data_SLAM_surv$cod)
 apply(apply(data_SLAM_surv,2,is.na),2,sum)
 
 
-usethis::use_data(data_SLAM_census, overwrite = TRUE)
+usethis::use_data(data_SLAM_surv, overwrite = TRUE)
