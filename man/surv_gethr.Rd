@@ -4,7 +4,7 @@
 \alias{surv_gethr}
 \title{Get Hazard Ratio from Cox Model}
 \usage{
-surv_gethr(fit, vars, names = NULL, ndec = 2)
+surv_gethr(fit, vars, names = NULL, ndec = 4)
 }
 \arguments{
 \item{fit}{coxph model}
@@ -37,4 +37,54 @@ in place of variable name.}
 The purpose of this function is so that the user can easily extract hazard ratios,
 hazard ratio confidence intervals, and hazard ratio pvalues easily. This function
 also outputs Hazard Ratios that can easily be added plots
+}
+\examples{
+### Repeated Measures (Longitudinal) Example
+## Lets see how glucose predicts mortaility in SLAM
+
+library(dplyr)
+library(SLAM)
+
+## Checkout census
+head(data_SLAM_census)
+
+## Checkout glucose
+head(data_SLAM_gluc)
+
+## Checkout survival data
+head(data_SLAM_surv)
+
+## Create dataframe with everything
+main <- data_SLAM_gluc \%>\%
+  select(-lact) \%>\% ## drop lactate
+  left_join(data_SLAM_census, by = "idno") \%>\% ## merge with census
+  left_join(data_SLAM_surv, by = "tag") \%>\% ## merge with survival
+  filter(!is.na(died)) \%>\% ## filter mice that have not died
+  mutate(age_wk = as.numeric(difftime(date, dob, units = "weeks")),  ## create age from date and dob
+         age_wk_death = as.numeric(difftime(died, dob, units = "weeks")), ## create age_wk_death from dob and died
+         dif = age_wk_death - age_wk) \%>\%## Create dif, the time between when the mouse was measured and it died
+  filter(age_wk <= age_wk_death) \%>\%## filter mice that were measured after their death
+  filter(!(age_wk == age_wk_death)) ## filter mice that were measured same day as death
+
+## Table death censor. 0 means death was not natural and 1 means natural deat
+table(main$dead_censor)
+
+## Checkout main
+head(main)
+## Checkout main NA's
+apply(apply(main,2,is.na),2,sum)
+
+### Now use surv_tmerge
+main_tmerge <- surv_tmerge(data = main, id = "idno", age = "age_wk", age_death = "age_wk_death", death_censor = "dead_censor", outcomes = c("gluc"))
+
+### Now lets make a cox model with our now time dependent dataframe
+fit <- surv_cox(data = main_tmerge, covariates = ~gluc+age_wk+sex+strain, time = "tstart", time2 = "tstop", death = "death")
+
+### Now lets extract Hazard Ratios
+hrs <- surv_gethr(fit, c("gluc", "age_wk"), names = c("Glucose", "Age (weeks)"), ndec = 4)
+
+## Lets look at final HR table
+hrs$hr_table \%>\%
+  select(final)
+
 }
