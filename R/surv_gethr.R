@@ -4,7 +4,9 @@
 #' hazard ratio confidence intervals, and hazard ratio pvalues easily. This function
 #' also outputs Hazard Ratios that can easily be added plots
 #' @param fit coxph model
-#' @param vars the covariates fo the cox model that we would like to extract hazard ratios for
+#' @param vars character vector including the covariates fo the cox model that we would
+#' like to extract hazard ratios for. Note: if a covariate was wrapped, for example tt(age_wk),
+#' the wrapping and the variable should be included
 #' @param names character vector of same length as vars that provides formal names for the variables
 #' in place of variable name.
 #' @param ndec numeric that specifies the number of decimal places to round the hazard ratios

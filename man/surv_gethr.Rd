@@ -9,7 +9,9 @@ surv_gethr(fit, vars, names = NULL, ndec = 4)
 \arguments{
 \item{fit}{coxph model}
 
-\item{vars}{the covariates fo the cox model that we would like to extract hazard ratios for}
+\item{vars}{character vector including the covariates fo the cox model that we would
+like to extract hazard ratios for. Note: if a covariate was wrapped, for example tt(age_wk),
+the wrapping and the variable should be included}
 
 \item{names}{character vector of same length as vars that provides formal names for the variables
 in place of variable name.}
