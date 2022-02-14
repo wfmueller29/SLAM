@@ -61,6 +61,11 @@
 #'                           id = "idno",
 #'                           age = "age_wk",
 #'                           vars = c("bw","lean","fluid","fat"))
+#'
+#' ## Checkout results
+#' head(gluc_nmr)
+#'
+#' @export
 
 
 

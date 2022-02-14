@@ -66,14 +66,21 @@
 #' main_tmerge <- surv_tmerge(data = main, id = "idno", age = "age_wk", age_death = "age_wk_death", death_censor = "dead_censor", outcomes = c("gluc"))
 #'
 #' ### Now lets make a cox model with our now time dependent dataframe
-#' fit <- surv_cox(data = main_tmerge, covariates = ~gluc+age_wk+sex+strain, time = "tstart", time2 = "tstop", death = "death")
+#' fit <- surv_cox(data = main_tmerge, covariates = ~gluc+tt(age_wk)+sex+strain, time = "tstart", time2 = "tstop", death = "death", tt = function(x,t,...)x*log(t+20))
 #'
-#' ### Now lets extract Hazard Ratios
-#' hrs <- surv_gethr(fit, c("gluc", "age_wk"), names = c("Glucose", "Age (weeks)"), ndec = 4)
+#' ### Now lets extract Hazard Ratios for glucose and age
+#' hrs <- surv_gethr(fit, c("gluc", "tt(age_wk)"), names = c("Glucose", "Age (weeks)"), ndec = 4)
 #'
 #' ## Lets look at final HR table
 #' hrs$hr_table %>%
 #'   select(final)
+#'
+#' ## Lets make predictions on other data
+#' pred_df <- data.frame(age_wk = c(40, 80, 20, 100),
+#'                       gluc = c(180, 200, 150, 120),
+#'                       sex = c("M", "M", "F","F"),
+#'                       strain = c("B6", "HET3","B6","HET3"))
+#' predict(fit, newdata = pred_df, type = "risk")
 #'
 #' @seealso \link[survival]{Surv} \link[survival]{coxph}
 #'
