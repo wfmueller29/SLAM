@@ -12,7 +12,8 @@ merge_diftime(
   threshold = Inf,
   vars = NULL,
   where = "both",
-  suffixes = c(".1", ".2")
+  suffixes = c(".1", ".2"),
+  clean_vars = TRUE
 )
 }
 \arguments{
@@ -25,21 +26,26 @@ match with the reference id's and dates and data1}
 \item{id}{either a character string, or a character vector of length 2. If the id variable
 in data1 and data2 have the same name, id is a character string. If the id variable of
 data1 and data2 are different, then id is a character vector, with the first value being the
-id variable of data1 and the seoncd being the id variable for data2.}
+id variable of data1 and the second being the id variable for data2.}
 
 \item{age}{either a character string, or a character vector of length 2. If the age variable
 in data1 and data2 have the same name, age is a character string. If the age variable of
 data1 and data2 are different, then age is a character vector, with the first value being the
-age variable of data1 and the seoncd being the age variable for data2.}
+age variable of data1 and the second being the age variable for data2.}
 
 \item{threshold}{a numeric value that provides the difference in time between measurements
 allowed. The numeric should be in the same units of age.}
 
 \item{vars}{optional character vector that provides the variable names for which this should
-be applied over. If specified, for each variable specified by var, only non-na value will be considered
-when merging with the closest measurment date.}
+be applied over. If specified, for each variable specified by var, only non-missing values will be considered
+when merging with the closest measurement date.}
 
-\item{suffixes}{}
+\item{suffixes}{specifies the suffix for non-unique variables between the two dataframes. However,
+even if the age and id variables are unique between the two dataframes, they will be assigned
+a suffix.}
+
+\item{clean_vars}{default is true. Will return all data1 columns and remove any duplicate columns from
+data2 with the exception of the age column.}
 }
 \value{
 a dataframe where each unique subject and age measurement in data1 is matched with the
@@ -48,11 +54,12 @@ closest aged measurement for that subject in data2.
 \description{
 Functions that merges two dataframes that have measurements at different ages.
 It matches the closest measurement in data2 before, after, or before or after the
-measurement in data1. If a threshold is specified
+measurement in data1. If a threshold is specified, it will ensure the closest measurement
+falls within that threshold or it will set it to missing.
 }
 \examples{
 
-## Example Merging clostest NMR to Glucose
+## Example Merging closest NMR to Glucose
 
 #load libs
 library(SLAM)

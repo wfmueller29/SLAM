@@ -2,7 +2,8 @@
 #'
 #' Functions that merges two dataframes that have measurements at different ages.
 #' It matches the closest measurement in data2 before, after, or before or after the
-#' measurement in data1. If a threshold is specified
+#' measurement in data1. If a threshold is specified, it will ensure the closest measurement
+#' falls within that threshold or it will set it to missing.
 #' @param data1 a dataframe that has the ids and ages of measurement that will serve
 #' as a reference for matching with data2
 #' @param data2 a dataframe that has the ids and ages of measurement we would like to
@@ -10,24 +11,28 @@
 #' @param id either a character string, or a character vector of length 2. If the id variable
 #' in data1 and data2 have the same name, id is a character string. If the id variable of
 #' data1 and data2 are different, then id is a character vector, with the first value being the
-#' id variable of data1 and the seoncd being the id variable for data2.
+#' id variable of data1 and the second being the id variable for data2.
 #' @param age either a character string, or a character vector of length 2. If the age variable
 #' in data1 and data2 have the same name, age is a character string. If the age variable of
 #' data1 and data2 are different, then age is a character vector, with the first value being the
-#' age variable of data1 and the seoncd being the age variable for data2.
+#' age variable of data1 and the second being the age variable for data2.
 #' @param threshold a numeric value that provides the difference in time between measurements
 #' allowed. The numeric should be in the same units of age.
 #' @param vars optional character vector that provides the variable names for which this should
-#' be applied over. If specified, for each variable specified by var, only non-na value will be considered
-#' when merging with the closest measurment date.
-#' @param suffixes
+#' be applied over. If specified, for each variable specified by var, only non-missing values will be considered
+#' when merging with the closest measurement date.
+#' @param suffixes specifies the suffix for non-unique variables between the two dataframes. However,
+#' even if the age and id variables are unique between the two dataframes, they will be assigned
+#' a suffix.
+#' @param clean_vars default is true. Will return all data1 columns and remove any duplicate columns from
+#' data2 with the exception of the age column.
 #'
 #' @return a dataframe where each unique subject and age measurement in data1 is matched with the
 #' closest aged measurement for that subject in data2.
 #'
 #' @examples
 #'
-#' ## Example Merging clostest NMR to Glucose
+#' ## Example Merging closest NMR to Glucose
 #'
 #' #load libs
 #' library(SLAM)
@@ -69,18 +74,18 @@
 
 
 
-merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, where = "both", suffixes = c(".1",".2")){
+merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, where = "both", suffixes = c(".1",".2"), clean_vars = TRUE){
+  ## manually add suffixes
+  names(data1) <- paste0(names(data1), suffixes[1])
+  names(data2) <- paste0(names(data2), suffixes[2])
+
   ## create corresponding id vars
   if(length(id) == 1){
     id1 <- paste0(id, suffixes[1])
     id2 <- paste0(id, suffixes[2])
-    names(data1)[names(data1) == id] <- id1
-    names(data2)[names(data2) == id] <- id2
   } else if(length(id) == 2){
     id1 <- paste0(id[1], suffixes[1])
     id2 <- paste0(id[2], suffixes[1])
-    names(data1)[names(data1) == id[1]] <- id1
-    names(data2)[names(data2) == id[2]] <- id2
   } else{
     stop("id must be length 1 or 2")
   }
@@ -89,13 +94,9 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
   if(length(age) == 1){
     age1 <- paste0(age, suffixes[1])
     age2 <- paste0(age, suffixes[2])
-    names(data1)[names(data1) == age] <- age1
-    names(data2)[names(data2) == age] <- age2
   } else if(length(age) == 2){
     age1 <- paste0(age[1], suffixes[1])
     age2 <- paste0(age[2], suffixes[1])
-    names(data1)[names(data1) == age[1]] <- age1
-    names(data2)[names(data2) == age[2]] <- age2
   } else{
     stop("age must be length 1 or 2")
   }
@@ -104,7 +105,8 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
   if(is.null(vars)){
     data2 <- data2
   }else if(!is.null(vars)){
-    data2 <- data2[complete.cases(data2[vars]),]
+    vars_suf <- paste0(vars, suffixes[2])
+    data2 <- data2[complete.cases(data2[vars_suf]),]
   }
 
 
@@ -149,6 +151,30 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
 
   } else{
     stop("where must be both, before, or after")
+  }
+
+  if(clean_vars){
+    suf1_regx <- paste0(suffixes[1],"$")
+    suf2_regx <- paste0(suffixes[2],"$")
+    col1 <- names(data_m)[grepl(suf1_regx, names(data_m))]
+    col2 <- names(data_m)[grepl(suf2_regx, names(data_m))]
+
+    col1_clean <- gsub(suf1_regx, replacement = "", x = col1)
+    col2_clean <- gsub(suf2_regx, replacement = "", x = col2)
+
+    if(length(age) == 1){
+      col1_clean <- gsub(age, replacement = age1, x = col1_clean)
+      col2_clean <- gsub(age, replacement = age2, x = col2_clean)
+    } else if(length(age) == 2){
+      col1_clean <- gsub(age[1], replacement = age1, x = col1_clean)
+      col2_clean <- gsub(age[2], replacement = age2, x = col2_clean)
+    }
+
+    var_keep <- col2[!col2_clean %in% col1_clean]
+    var_keep <- c(col1, var_keep, "dif")
+
+    data_m <- data_m[,var_keep]
+    names(data_m)[names(data_m) %in% col1] <- col1_clean
   }
 
   return(data_m)
