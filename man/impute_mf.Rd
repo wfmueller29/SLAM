@@ -11,15 +11,15 @@ impute_mf(df, df_true = NULL, factors = NULL, drop = NULL, ntree = 500, ...)
 
 \item{df_true}{optional complete dataframe of the dataframe provided as df argument}
 
+\item{factors}{a character vector of factor variables that we would like specfiy as factors when imputing
+These factors variables can be numeric or character variables in the df provided}
+
 \item{drop}{a character vector of variables that will not be included in the imputation.
 These variables will be added to the outputted dataframe, even though they are not inclued in the imputation.}
 
 \item{ntree}{number of trees to grow in each forest. Default is set to 500.}
 
 \item{...}{Other arguments to be passed to missForest imputation, besides ntree}
-
-\item{facotrs}{a character vector of factor variables that we would like specfiy as factors when imputing
-These factors variables can be numeric or character variables in the df provided}
 }
 \value{
 A list of output similar to missForest

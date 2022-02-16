@@ -40,6 +40,10 @@ allowed. The numeric should be in the same units of age.}
 be applied over. If specified, for each variable specified by var, only non-missing values will be considered
 when merging with the closest measurement date.}
 
+\item{where}{a character string that specifies where to look for the closest observation in data2
+relative to data1. "before" means that merge_diftime will look before the reference observation in data1. "after" means the same except after. "both"
+means that merge_ditime will match using observations on either side of the reference observation in data1.}
+
 \item{suffixes}{specifies the suffix for non-unique variables between the two dataframes. However,
 even if the age and id variables are unique between the two dataframes, they will be assigned
 a suffix.}

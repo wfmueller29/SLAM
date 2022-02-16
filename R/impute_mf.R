@@ -5,7 +5,7 @@
 #' back after imputation and relabel the factor variables.
 #' @param df the dataframe that we would like to impute NAs.
 #' @param df_true optional complete dataframe of the dataframe provided as df argument
-#' @param facotrs a character vector of factor variables that we would like specfiy as factors when imputing
+#' @param factors a character vector of factor variables that we would like specfiy as factors when imputing
 #' These factors variables can be numeric or character variables in the df provided
 #' @param drop a character vector of variables that will not be included in the imputation.
 #' These variables will be added to the outputted dataframe, even though they are not inclued in the imputation.
@@ -30,6 +30,8 @@
 #'     was supplied. The error measures are the same as for 'OOBerror'.
 #'     }
 #' @param ... Other arguments to be passed to missForest imputation, besides ntree
+#'
+#' @importFrom missForest missForest
 #'
 #' @export
 

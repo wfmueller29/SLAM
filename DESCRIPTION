@@ -1,15 +1,24 @@
 Package: SLAM
 Type: Package
 Title: SLAM Package
-Version: 0.1.0
+Version: 0.0.1
 Author: William Mueller
 Maintainer: Wiliam Mueller <wfmueller29@gmail.com>
 Description: Package with useful functions that can be applied to SLAM data and
   data from other longitudinal studies. This package also includes sample datasets from
-  SLAM that have been published
-License: What license is it under?
+  SLAM that have been published.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
+Imports: 
+    dplyr,
+    survival,
+    rlang,
+    missForest
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
