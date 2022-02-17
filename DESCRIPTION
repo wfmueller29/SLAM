@@ -27,5 +27,6 @@ Imports:
     rlang,
     survival
 Suggests: 
+    dplyr,
     knitr,
     rmarkdown
