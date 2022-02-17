@@ -1,25 +1,21 @@
 Type: Package
 Package: SLAM
-Title: SLAM Package
+Title: SLAM - Functions for Longitduinal Datasets
 Version: 0.0.1
+Authors@R: c(
+    person("William", "Mueller", email = "wfmueller29@gmail.com", role = c("aut", "cre")),
+    person("Jorge", "Martinez Romero", role = "ctb"),
+    person("Eric", "Shiroma", role = "ctb"),
+    person("Romaniya", "Voloshchuk", role = "ctb"),
+    person("Diego", "Tanton", role = "ctb"),
+    person("Daniela", "Barata Herrera", role = "ctb"),
+    person("Rafael", "de Cabo", role = "fnd")
+  )
 Maintainer: Wiliam Mueller <wfmueller29@gmail.com>
 Description: Package with useful functions that can be applied to SLAM
     data and data from other longitudinal studies. This package also
     includes sample datasets from SLAM that have been published.
 License: MIT + file LICENSE
-VignetteBuilder: 
-    knitr
-Authors@R: c(
-    person("William","Mueller", email = "wfmueller29@gmail.com", role = c("aut","cre")),
-    person("Jorge", "Martinez Romero", role = c("ctb")),
-    person("Eric", "Shiroma", role = c("ctb")),
-    person("Romaniya", "Voloshchuk", role = c("ctb")),
-    person("Diego", "Tanton", role = c("ctb")),
-    person("Daniela", "Barata Herrera", role = c("ctb")),
-    person("Rafael", "de Cabo", role = c("fnd")))
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
 Imports: 
@@ -30,3 +26,8 @@ Suggests:
     dplyr,
     knitr,
     rmarkdown
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2

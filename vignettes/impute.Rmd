@@ -1,0 +1,19 @@
+---
+title: "Imputation Methods for SLAM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Imputation Methods for SLAM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SLAM)
+```

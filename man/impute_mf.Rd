@@ -4,18 +4,27 @@
 \alias{impute_mf}
 \title{Impute using missForest}
 \usage{
-impute_mf(df, df_true = NULL, factors = NULL, drop = NULL, ntree = 500, ...)
+impute_mf(
+  data,
+  data_true = NULL,
+  factors = NULL,
+  drop = NULL,
+  ntree = 500,
+  ...
+)
 }
 \arguments{
-\item{df}{the dataframe that we would like to impute NAs.}
+\item{data}{the dataframe that we would like to impute NAs.}
 
-\item{df_true}{optional complete dataframe of the dataframe provided as df argument}
+\item{data_true}{optional complete dataframe of the dataframe provided as data argument}
 
-\item{factors}{a character vector of factor variables that we would like specfiy as factors when imputing
-These factors variables can be numeric or character variables in the df provided}
+\item{factors}{a character vector of factor variables that we would like specfiy as factors when imputing.
+These factors variables can be numeric or character variables in the data provided. It is recommended
+that does not have numeric meaning be included as a factor.}
 
 \item{drop}{a character vector of variables that will not be included in the imputation.
-These variables will be added to the outputted dataframe, even though they are not inclued in the imputation.}
+These variables will be added to the outputted dataframe, even though they are not included in the imputation.
+Variables to include here would be dates as missForest cannot impute dates.}
 
 \item{ntree}{number of trees to grow in each forest. Default is set to 500.}
 
@@ -24,7 +33,7 @@ These variables will be added to the outputted dataframe, even though they are n
 \value{
 A list of output similar to missForest
     \item{ximp}{
-    a dataframe with no missing values. The resulting dataframe will be of the same size as the original df
+    a dataframe with no missing values. The resulting dataframe will be of the same size as the original data
     provided, but with all of the NA's imputed. However, if there are NA's in the drop columns, these values wil
     not be imputed.
     }
