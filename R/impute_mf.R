@@ -38,17 +38,17 @@
 #' @export
 
 
-impute_mf <- function(data, data_true = NULL, factors = NULL, drop = NULL, ntree = 500, ...){
-  data_drop <- data[,drop] # save drop variables
+impute_mf <- function(data, data_true = NULL, factors = NULL, drop = NULL, ntree = 500, ...) {
+  data_drop <- data[, drop] # save drop variables
   # convert to be factor variables to character, then to factor. This insures no excess factor levels if the variable is originally numeric
-  data[,factors] <- lapply(factors, function(factor)as.factor(as.character(data[,factor])))
+  data[, factors] <- lapply(factors, function(factor) as.factor(as.character(data[, factor])))
 
   dm_prep <- data[!(names(data) %in% drop)] # drop drop variables
   dm_prep <- data.matrix(dm_prep) # create data matrix
 
-  if(!is.null(data_true)){
+  if (!is.null(data_true)) {
     # convert to be factor variables to character, then to factor. This insures no excess factor levels if the variable is originally numeric
-    data_true[,factors] <- lapply(factors, function(factor)as.factor(as.character(data_true[,factor])))
+    data_true[, factors] <- lapply(factors, function(factor) as.factor(as.character(data_true[, factor])))
 
     dm_true_prep <- data_true[!(names(data_true) %in% drop)] # drop drop variables
     dm_true_prep <- data.matrix(dm_true_prep) # create data matrix
@@ -56,16 +56,15 @@ impute_mf <- function(data, data_true = NULL, factors = NULL, drop = NULL, ntree
 
   set.seed(365)
 
-  imp <- missForest::missForest(dm_prep, ntree = ntree, xtrue=dm_true_prep, ...) # impute with missed forest
+  imp <- missForest::missForest(dm_prep, ntree = ntree, xtrue = dm_true_prep, ...) # impute with missed forest
 
   imp$ximp <- as.data.frame(imp$ximp)
   imp$ximp <- cbind(imp$ximp, data_drop) # bind imputed dataframe with dropped columns
-  imp$ximp[,factors] <- lapply(factors, function(fact){ # use old factor levels to relabel factor variables
-    factor(as.character(round(imp$ximp[,fact])), labels = levels(data[,fact]))
+  imp$ximp[, factors] <- lapply(factors, function(fact) { # use old factor levels to relabel factor variables
+    factor(as.character(round(imp$ximp[, fact])), labels = levels(data[, fact]))
   })
 
   imp$ximp <- imp$ximp
 
   return(imp)
-
 }

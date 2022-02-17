@@ -40,9 +40,11 @@
 #'   # filter mice without date of death
 #'   main <- dplyr::filter(main, !is.na(died))
 #'   # create age, age of death, and difference between age and age of death
-#'   main <- dplyr::mutate(main, age_wk = as.numeric(difftime(date, dob, units = "weeks")),
-#'                         age_wk_death = as.numeric(difftime(died, dob, units = "weeks")),
-#'                         dif = age_wk_death - age_wk)
+#'   main <- dplyr::mutate(main,
+#'     age_wk = as.numeric(difftime(date, dob, units = "weeks")),
+#'     age_wk_death = as.numeric(difftime(died, dob, units = "weeks")),
+#'     dif = age_wk_death - age_wk
+#'   )
 #'   # filter mice measured after death because tmerge will throw error
 #'   main <- dplyr::filter(main, age_wk <= age_wk_death)
 #'   # filter mice that were measured same day as death because tmerge with throw an error
@@ -55,45 +57,51 @@
 #'   # Checkout main
 #'   head(main)
 #'   # Checkout main NA's
-#'   apply(apply(main,2,is.na),2,sum)
+#'   apply(apply(main, 2, is.na), 2, sum)
 #'
 #'   # Now use surv_tmerge --------------------------------------------------------
-#'   main_tmerge <- surv_tmerge(data = main,
-#'                              id = "idno",
-#'                              age = "age_wk",
-#'                              age_death = "age_wk_death",
-#'                              death_censor = "dead_censor",
-#'                              outcomes = c("gluc"))
+#'   main_tmerge <- surv_tmerge(
+#'     data = main,
+#'     id = "idno",
+#'     age = "age_wk",
+#'     age_death = "age_wk_death",
+#'     death_censor = "dead_censor",
+#'     outcomes = c("gluc")
+#'   )
 #'
 #'   # Now lets make a cox model with our now time dependent dataframe ------------
-#'   fit <- surv_cox(data = main_tmerge,
-#'                   covariates = ~gluc+age_wk+sex+strain,
-#'                   time = "tstart",
-#'                   time2 = "tstop",
-#'                   death = "death")
+#'   fit <- surv_cox(
+#'     data = main_tmerge,
+#'     covariates = ~ gluc + age_wk + sex + strain,
+#'     time = "tstart",
+#'     time2 = "tstop",
+#'     death = "death"
+#'   )
 #'
 #'   # Now lets extract Hazard Ratios ------------------------------------------
-#'   hrs <- surv_gethr(fit = fit,
-#'                     vars =c("gluc", "age_wk"),
-#'                     names = c("Glucose", "Age (weeks)"),
-#'                     ndec = 4)
+#'   hrs <- surv_gethr(
+#'     fit = fit,
+#'     vars = c("gluc", "age_wk"),
+#'     names = c("Glucose", "Age (weeks)"),
+#'     ndec = 4
+#'   )
 #'
 #'   # Lets look at final HR table
 #'   dplyr::select(hrs$hr_table, final)
 #'
 #'   # Lets make predictions on other data ---------------------------------------
 #'   # create new data for 4 mice
-#'   pred_df <- data.frame(age_wk = c(40, 80, 20, 100),
-#'                         gluc = c(180, 200, 150, 120),
-#'                         sex = c("M", "M", "F","F"),
-#'                         strain = c("B6", "HET3","B6","HET3"))
+#'   pred_df <- data.frame(
+#'     age_wk = c(40, 80, 20, 100),
+#'     gluc = c(180, 200, 150, 120),
+#'     sex = c("M", "M", "F", "F"),
+#'     strain = c("B6", "HET3", "B6", "HET3")
+#'   )
 #'   # use predict function to get HR for each mouse
 #'   predict(fit, newdata = pred_df, type = "risk")
-#'
-#' } else{
+#' } else {
 #'   print("Install dplyr to run this example")
 #' }
-#'
 #' @importFrom survival tmerge
 #'
 #' @importFrom rlang call2
@@ -103,7 +111,7 @@
 #' @export
 
 
-surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes){
+surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes) {
   # Create baseline data -------------------------------------------------------
 
   # Reoder Dataset by Id and Age
@@ -116,13 +124,14 @@ surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes){
   # Create call for first tmerge
   event <- call("event", as.symbol(age_death), as.symbol(death_censor))
   cl_tmerge1 <- rlang::call2("tmerge",
-                             data1 = as.symbol("data_baseline"),
-                             data2 = as.symbol("data_baseline"),
-                             id = as.symbol(id),
-                             tstart = as.symbol(age),
-                             tstop = as.symbol(age_death),
-                             death = event,
-                             .ns = "survival")
+    data1 = as.symbol("data_baseline"),
+    data2 = as.symbol("data_baseline"),
+    id = as.symbol(id),
+    tstart = as.symbol(age),
+    tstop = as.symbol(age_death),
+    death = event,
+    .ns = "survival"
+  )
 
   # Call first tmerge, this will create a tstart, tstop, and death column
   # tstart is the time of first observation
@@ -136,24 +145,22 @@ surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes){
   # and make death column 0
   # Create tmerge ... arguments and store them as args. age is included so it will
   # be constant
-  args <- lapply(c(outcomes, age), function(outcome){
+  args <- lapply(c(outcomes, age), function(outcome) {
     call("tdc", as.symbol(age), as.symbol(outcome))
   })
   # name args
   names(args) <- outcomes
   # Create call
   cl_tmerge2 <- rlang::call2("tmerge",
-                             data1 = as.symbol("data1"),
-                             data2 = as.symbol("data"),
-                             id = as.symbol(id),
-                             !!!args,
-                             .ns = "survival")
+    data1 = as.symbol("data1"),
+    data2 = as.symbol("data"),
+    id = as.symbol(id),
+    !!!args,
+    .ns = "survival"
+  )
 
   # Call second tmerge
   data2 <- eval(cl_tmerge2)
 
   return(data2)
 }
-
-
-

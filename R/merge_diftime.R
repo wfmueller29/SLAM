@@ -54,8 +54,10 @@
 #'   # drop useless vars
 #'   gluc <- dplyr::select(gluc, -c(lact, cohort, animal_id, tag, taghistory, cage, eartag, name, X))
 #'   # create age for merging and format data so it makes sense
-#'   gluc <- dplyr::mutate(gluc, age_wk = difftime(date, dob, units = "weeks"),
-#'                         date = as.Date(date, "%m%d%Y"))
+#'   gluc <- dplyr::mutate(gluc,
+#'     age_wk = difftime(date, dob, units = "weeks"),
+#'     date = as.Date(date, "%m%d%Y")
+#'   )
 #'
 #'   # Create nmr -----------------------------------------------------------------
 #'   # join nmr with census for dob and other info
@@ -63,29 +65,32 @@
 #'   # drop useless columns
 #'   nmr <- dplyr::select(nmr, -c(cohort, animal_id, tag, taghistory, cage, eartag, name, X))
 #'   # create age for merging and format data so it makes sense
-#'   nmr <- dplyr::mutate(nmr, age_wk = difftime(date, dob, units = "weeks"),
-#'                        date = as.Date(date, "%m%d%Y"))
+#'   nmr <- dplyr::mutate(nmr,
+#'     age_wk = difftime(date, dob, units = "weeks"),
+#'     date = as.Date(date, "%m%d%Y")
+#'   )
 #'
 #'   # Use merge_diftime ----------------------------------------------------------
-#'   gluc_nmr <- merge_diftime(data1 = gluc,
-#'                             data2 = nmr,
-#'                             id = "idno",
-#'                             age = "age_wk",
-#'                             vars = c("bw","lean","fluid","fat"))
+#'   gluc_nmr <- merge_diftime(
+#'     data1 = gluc,
+#'     data2 = nmr,
+#'     id = "idno",
+#'     age = "age_wk",
+#'     vars = c("bw", "lean", "fluid", "fat")
+#'   )
 #'
 #'   # Checkout results
 #'   head(gluc_nmr)
-#' } else{
+#' } else {
 #'   message("Install dplyr to run this example")
 #' }
-#'
 #' @importFrom stats as.formula complete.cases
 #'
 #' @export
 
 
 
-merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, where = "both", suffixes = c(".1",".2"), clean_vars = TRUE){
+merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, where = "both", suffixes = c(".1", ".2"), clean_vars = TRUE) {
 
   # prep data1 and data2 -------------------------------------------------------
   # manually add suffixes so easy to identify which column came from which dataframe
@@ -101,7 +106,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
   } else if (length(id) == 2) {
     id1 <- paste0(id[1], suffixes[1])
     id2 <- paste0(id[2], suffixes[1])
-  } else{
+  } else {
     stop("id must be length 1 or 2")
   }
 
@@ -112,7 +117,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
   } else if (length(age) == 2) {
     age1 <- paste0(age[1], suffixes[1])
     age2 <- paste0(age[2], suffixes[1])
-  } else{
+  } else {
     stop("age must be length 1 or 2")
   }
 
@@ -120,9 +125,9 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
   # if vars are specified ensure complete cases for those vars
   if (is.null(vars)) {
     data2 <- data2
-  }else if (!is.null(vars)) {
+  } else if (!is.null(vars)) {
     vars_suf <- paste0(vars, suffixes[2])
-    data2 <- data2[complete.cases(data2[vars_suf]),]
+    data2 <- data2[complete.cases(data2[vars_suf]), ]
   }
 
   # merge and create dif -------------------------------------------------------
@@ -135,45 +140,41 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
   # where to check for closest date
   if (where == "both") {
     data_m <- data_m[order(data_m[[id1]], abs(data_m$dif)), , drop = FALSE]
-    df_dups <- data_m[c(id1,age1)]
+    df_dups <- data_m[c(id1, age1)]
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
-    data2_cols <- names(data_m)[grepl(paste0(suffixes[2],"$"), names(data_m))]
-    data_m[,data2_cols] <- lapply(data2_cols, function(name){
-      ifelse(abs(data_m$dif) > threshold, NA, data_m[,name] )
+    data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data_m[, data2_cols] <- lapply(data2_cols, function(name) {
+      ifelse(abs(data_m$dif) > threshold, NA, data_m[, name])
     })
-
-
   } else if (where == "before") {
-    data_m <- data_m[data_m$dif <= 0,]
-    data_m <- data_m[order(data_m[[id1]], -1*data_m$dif), , drop = FALSE]
-    df_dups <- data_m[c(id1,age1)]
+    data_m <- data_m[data_m$dif <= 0, ]
+    data_m <- data_m[order(data_m[[id1]], -1 * data_m$dif), , drop = FALSE]
+    df_dups <- data_m[c(id1, age1)]
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
-    data2_cols <- names(data_m)[grepl(paste0(suffixes[2],"$"), names(data_m))]
-    data_m[,data2_cols] <- lapply(data2_cols, function(name){
-      ifelse(data_m$dif*-1 > threshold, NA, data_m[,name] )
+    data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data_m[, data2_cols] <- lapply(data2_cols, function(name) {
+      ifelse(data_m$dif * -1 > threshold, NA, data_m[, name])
     })
-
   } else if (where == "after") {
-    data_m <- data_m[data_m$dif >= 0,]
+    data_m <- data_m[data_m$dif >= 0, ]
     data_m <- data_m[order(data_m[[id1]], data_m$dif), , drop = FALSE]
-    df_dups <- data_m[c(id1,age1)]
+    df_dups <- data_m[c(id1, age1)]
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
-    data2_cols <- names(data_m)[grepl(paste0(suffixes[2],"$"), names(data_m))]
-    data_m[,data2_cols] <- lapply(data2_cols, function(name){
-      ifelse(data_m$dif > threshold, NA, data_m[,name] )
+    data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data_m[, data2_cols] <- lapply(data2_cols, function(name) {
+      ifelse(data_m$dif > threshold, NA, data_m[, name])
     })
-
-  } else{
+  } else {
     stop("where must be both, before, or after")
   }
 
   # clean vars -----------------------------------------------------------------
   if (isTRUE(clean_vars)) {
-    suf1_regx <- paste0(suffixes[1],"$")
-    suf2_regx <- paste0(suffixes[2],"$")
+    suf1_regx <- paste0(suffixes[1], "$")
+    suf2_regx <- paste0(suffixes[2], "$")
     col1 <- names(data_m)[grepl(suf1_regx, names(data_m))]
     col2 <- names(data_m)[grepl(suf2_regx, names(data_m))]
 
@@ -191,7 +192,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     var_keep <- col2[!col2_clean %in% col1_clean]
     var_keep <- c(col1, var_keep, "dif")
 
-    data_m <- data_m[,var_keep]
+    data_m <- data_m[, var_keep]
     names(data_m)[names(data_m) %in% col1] <- col1_clean
   }
 
