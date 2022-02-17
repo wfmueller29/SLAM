@@ -1,7 +1,7 @@
 Type: Package
 Package: SLAM
 Title: SLAM - Functions for Longitduinal Datasets
-Version: 0.0.2
+Version: 0.0.2.9000
 Authors@R: c(
     person("William", "Mueller", email = "wfmueller29@gmail.com", role = c("aut", "cre")),
     person("Jorge", "Martinez Romero", role = "ctb"),
