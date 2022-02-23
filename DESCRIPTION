@@ -2,15 +2,7 @@ Type: Package
 Package: SLAM
 Title: SLAM - Functions for Longitduinal Datasets
 Version: 0.0.2.9000
-Authors@R: c(
-    person("William", "Mueller", email = "wfmueller29@gmail.com", role = c("aut", "cre")),
-    person("Jorge", "Martinez Romero", role = "ctb"),
-    person("Eric", "Shiroma", role = "ctb"),
-    person("Romaniya", "Voloshchuk", role = "ctb"),
-    person("Diego", "Tanton", role = "ctb"),
-    person("Daniela", "Barata Herrera", role = "ctb"),
-    person("Rafael", "de Cabo", role = "fnd")
-  )
+Author: SLAM team
 Maintainer: Wiliam Mueller <wfmueller29@gmail.com>
 Description: Package with useful functions that can be applied to SLAM
     data and data from other longitudinal studies. This package also
