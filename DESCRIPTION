@@ -1,7 +1,7 @@
 Type: Package
 Package: SLAM
 Title: SLAM - Functions for Longitduinal Datasets
-Version: 0.0.3
+Version: 0.0.3.9000
 Author: SLAM team
 Maintainer: Wiliam Mueller <wfmueller29@gmail.com>
 Description: Package with useful functions that can be applied to SLAM
