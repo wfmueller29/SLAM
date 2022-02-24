@@ -102,9 +102,6 @@
 #' } else {
 #'   print("Install dplyr to run this example")
 #' }
-#' @importFrom survival tmerge
-#'
-#' @importFrom rlang call2
 #'
 #' @seealso \link[survival]{tmerge}
 #'

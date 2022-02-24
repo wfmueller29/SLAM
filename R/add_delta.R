@@ -4,14 +4,17 @@
 #' and dataframe.
 #'
 #' @param data the dataframe to be called
-#' @param var the variable name
+#' @param cols the character string or character vector of columns to apply this
+#' function to
 #' @param id the name of the id variable
+#' @param time variable denoting the time variable
+#' @param fill numeric or NA to
 #'
 #'
 #'
 #' @export
 #'
-#' @importFrom data.table .N .I ':='
+#' @importFrom data.table ':=' .SD
 #'
 
 add_delta <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefix = paste("delta", type, n, sep = "_")){

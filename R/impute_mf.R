@@ -33,8 +33,6 @@
 #'     }
 #' @param ... Other arguments to be passed to missForest imputation, besides ntree
 #'
-#' @importFrom missForest missForest
-#'
 #' @export
 
 

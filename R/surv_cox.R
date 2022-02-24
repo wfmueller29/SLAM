@@ -115,8 +115,6 @@
 #' }
 #' @seealso \link[survival]{Surv} \link[survival]{coxph}
 #'
-#' @importFrom survival Surv coxph
-#'
 #' @export
 
 surv_cox <- function(data, covariates, time, time2 = NULL, death, tt = NULL, type = c("right", "left", "interval", "counting", "interval2", "mstate")) {

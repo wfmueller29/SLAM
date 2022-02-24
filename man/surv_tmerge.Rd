@@ -116,6 +116,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 } else {
   print("Install dplyr to run this example")
 }
+
 }
 \seealso{
 \link[survival]{tmerge}
