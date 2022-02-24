@@ -18,9 +18,20 @@ add_delta(
 \arguments{
 \item{data}{the dataframe to be called}
 
+\item{cols}{the character string or character vector of columns to apply this
+function to}
+
 \item{id}{the name of the id variable}
 
-\item{var}{the variable name}
+\item{time}{variable denoting the time variable}
+
+\item{fill}{numeric or NA to}
+
+\item{n}{number of steps to alter roling difference window}
+
+\item{type}{character string whether lead or lag should be used}
+
+\item{prefix}{prefix denoting type of delta}
 }
 \description{
 This function will create a delta variable given a subject id, variable name
