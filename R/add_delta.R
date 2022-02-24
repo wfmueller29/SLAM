@@ -11,6 +11,8 @@
 #'
 #' @export
 #'
+#' @importFrom data.table .N .I ':='
+#'
 
 add_delta <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefix = paste("delta", type, n, sep = "_")){
 
