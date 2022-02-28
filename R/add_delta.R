@@ -1,17 +1,20 @@
 #' Add delta variable
 #'
 #' This function will create a delta variable given a subject id, variable name
-#' and dataframe.
+#' and dataframe. It will also skip NA values in the calculation of the delta.
 #'
 #' @param data the dataframe to be called
 #' @param cols the character string or character vector of columns to apply this
 #' function to
-#' @param id the name of the id variable
-#' @param time variable denoting the time variable
-#' @param fill numeric or NA to
-#' @param n number of steps to alter roling difference window
+#' @param id a character string specifying the name of the id variable
+#' @param time a character stirng the time variable
+#' @param fill numeric or NA to specifying what to fill the values that fall
+#' outside the offset window. For example, if we ar taking lagged differences, this
+#' will set the value of the firt observation.
+#' @param n number of steps to alter rolling difference window
 #' @param type character string whether lead or lag should be used
-#' @param prefix prefix denoting type of delta
+#' @param prefix a character string denothing the prefix of the delta column.
+#' The column name for the new delta column will be "prefix_oldname"
 #'
 #'
 #'

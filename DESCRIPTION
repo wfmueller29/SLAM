@@ -12,13 +12,13 @@ Depends:
     R (>= 2.10)
 Imports: 
     data.table,
-    missForest,
     rlang,
     survival
 Suggests: 
     dplyr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    missForest
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
