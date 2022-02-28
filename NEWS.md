@@ -31,14 +31,14 @@ each subject.
 
 * First release 
 * Included 5 functions:
- 1. `surv_tmerge()` - creates a dataframe for repeated measures cox analysis
- 2. `surv_cox()` - creates a cox model
- 3. `surv_gethr()` - extracts hazard ratios from your cox model
- 4. `merge_diftime()` - merges two datasets that has different measurement times
- 5. `impute_mf()` - imputes missing values in a dataframe using missForest package
-* Included 4 dataframes:
- 1. `data_SLAM_census` - SLAM census info
- 2. `data_SLAM_surv` - SLAM survival info
- 3. `data_SLAM_gluc` - SLAM glucose info
- 4. `data_SLAM_nmr` - SLAM nmr info
+    1. `surv_tmerge()` - creates a dataframe for repeated measures cox analysis
+    2. `surv_cox()` - creates a cox model
+    3. `surv_gethr()` - extracts hazard ratios from your cox model
+    4. `merge_diftime()` - merges two datasets that has different measurement times
+    5. `impute_mf()` - imputes missing values in a dataframe using missForest package
 (CAUTION: not tested)
+* Included 4 dataframes:
+    1. `data_SLAM_census` - SLAM census info
+    2. `data_SLAM_surv` - SLAM survival info
+    3. `data_SLAM_gluc` - SLAM glucose info
+    4. `data_SLAM_nmr` - SLAM nmr info
