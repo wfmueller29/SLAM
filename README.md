@@ -2,7 +2,7 @@
 functions and tools for longitudinal studies
 
 ## Installation
-install devtools
+If not already installed, install devtools
 ```r
 install.packages("devtools")
 ```
