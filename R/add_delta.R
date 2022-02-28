@@ -38,16 +38,18 @@ add_delta <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefi
     # data table chain ---------------------------------------------------------
     # create col_na that is true if col is NA and false otherwise
     dt <- dt[, (col_na) := lapply(.SD, is.na), .SDcols = col
-    # order dt by time so that rolling differences are taken properly
+             # order dt by time so that rolling differences are taken properly
     ][order(dt[[time]])
-    # create delta variable using n and type arguments specified in function call.
-    # the dt is grouped by id and col_na so that delta calculation will "skip"
-    # dates when there is NAs
+      # create delta variable using n and type arguments specified in function call.
+      # the dt is grouped by id and col_na so that delta calculation will "skip"
+      # dates when there is NAs
     ][, (col_delta) := .SD - data.table::shift(x = .SD, n = n, fill = NA, type = type), keyby = c(id, col_na), .SDcols = col]
     # if there are NA's in col_delta and no NAs in col, we know that the NA
     # in col_delta is from lag window. We want to replace these NA's. However,
     # any NA's in col_delta from due to an NA in col, we want to leave these NA.
-    dt <- dt[is.na(dt[[col_delta]]) & !dt[[col_na]], (col_delta) := (fill)]
+    dt <- dt[is.na(dt[[col_delta]]) & !dt[[col_na]], (col_delta) := (fill)
+             # Drop the na column
+    ][, (col_na) := NULL]
 
   }
   # ----------------------------------------------------------------------------

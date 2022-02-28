@@ -144,6 +144,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
     data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
     data_m[, data2_cols] <- lapply(data2_cols, function(name) {
       ifelse(abs(data_m$dif) > threshold, NA, data_m[, name])
     })
@@ -154,6 +155,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
     data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
     data_m[, data2_cols] <- lapply(data2_cols, function(name) {
       ifelse(data_m$dif * -1 > threshold, NA, data_m[, name])
     })
@@ -164,6 +166,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
     data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
     data_m[, data2_cols] <- lapply(data2_cols, function(name) {
       ifelse(data_m$dif > threshold, NA, data_m[, name])
     })

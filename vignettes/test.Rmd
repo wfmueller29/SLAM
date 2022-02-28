@@ -21,7 +21,6 @@ library(dplyr)
 
 ## Test merge_diftime
 
-
 ```{r}
 # Example Merging clostest NMR to Glucose --------------------------------------
 
@@ -69,6 +68,132 @@ gluc_nmr <- merge_diftime(
 # Checkout results
 head(gluc_nmr)
 
+# test ------------------------------------------------------------------------
+  data1 <- gluc
+  data2 <- nmr
+  id <- "idno"
+  age <- "age_wk"
+  vars <- c("bw", "lean", "fluid", "fat")
+  suffixes <- c(".1", ".2")
+  clean_vars <- "both"
+  threshold <- Inf
+  where <- "both"
+
+
+merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, where = "both", suffixes = c(".1", ".2"), clean_vars = TRUE) {
+  
+  # prep data1 and data2 -------------------------------------------------------
+  # manually add suffixes so easy to identify which column came from which dataframe
+  names(data1) <- paste0(names(data1), suffixes[1])
+  names(data2) <- paste0(names(data2), suffixes[2])
+
+  # create id and age vars if length id = 1 or 2 -------------------------------
+  # do this for consistency of function regardless of age or id input
+  # create corresponding id vars
+  if (length(id) == 1) {
+    id1 <- paste0(id, suffixes[1])
+    id2 <- paste0(id, suffixes[2])
+  } else if (length(id) == 2) {
+    id1 <- paste0(id[1], suffixes[1])
+    id2 <- paste0(id[2], suffixes[1])
+  } else {
+    stop("id must be length 1 or 2")
+  }
+
+  # create corresponding age vars
+  if (length(age) == 1) {
+    age1 <- paste0(age, suffixes[1])
+    age2 <- paste0(age, suffixes[2])
+  } else if (length(age) == 2) {
+    age1 <- paste0(age[1], suffixes[1])
+    age2 <- paste0(age[2], suffixes[1])
+  } else {
+    stop("age must be length 1 or 2")
+  }
+
+  # if vars specified ----------------------------------------------------------
+  # if vars are specified ensure complete cases for those vars
+  if (is.null(vars)) {
+    data2 <- data2
+  } else if (!is.null(vars)) {
+    vars_suf <- paste0(vars, suffixes[2])
+    data2 <- data2[complete.cases(data2[vars_suf]), ]
+  }
+
+  # merge and create dif -------------------------------------------------------
+  data_m <- merge(data1, data2, by.x = id1, by.y = id2, all.x = TRUE, suffixes = suffixes)
+
+  # dif tells use time difference and direction
+  data_m$dif <- data_m[[age2]] - data_m[[age1]]
+
+  # look for closest date ------------------------------------------------------
+  # where to check for closest date
+  if (where == "both") {
+    data_m <- data_m[order(data_m[[id1]], abs(data_m$dif)), , drop = FALSE]
+    df_dups <- data_m[c(id1, age1)]
+    data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
+    # threshold
+    data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
+    data_m[, data2_cols] <- lapply(data2_cols, function(name) {
+      if(class(data_m[,name])!="Date"){
+        ifelse(abs(data_m$dif) > threshold, NA, data_m[, name])
+      } else{}
+    })
+  } else if (where == "before") {
+    data_m <- data_m[data_m$dif <= 0, ]
+    data_m <- data_m[order(data_m[[id1]], -1 * data_m$dif), , drop = FALSE]
+    df_dups <- data_m[c(id1, age1)]
+    data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
+    # threshold
+    data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
+    data_m[, data2_cols] <- lapply(data2_cols, function(name) {
+      ifelse(data_m$dif * -1 > threshold, NA, data_m[, name])
+    })
+  } else if (where == "after") {
+    data_m <- data_m[data_m$dif >= 0, ]
+    data_m <- data_m[order(data_m[[id1]], data_m$dif), , drop = FALSE]
+    df_dups <- data_m[c(id1, age1)]
+    data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
+    # threshold
+    data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
+    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
+    data_m[, data2_cols] <- lapply(data2_cols, function(name) {
+      ifelse(data_m$dif > threshold, NA, data_m[, name])
+    })
+  } else {
+    stop("where must be both, before, or after")
+  }
+  
+  # clean vars -----------------------------------------------------------------
+  if (isTRUE(clean_vars)) {
+    suf1_regx <- paste0(suffixes[1], "$")
+    suf2_regx <- paste0(suffixes[2], "$")
+    col1 <- names(data_m)[grepl(suf1_regx, names(data_m))]
+    col2 <- names(data_m)[grepl(suf2_regx, names(data_m))]
+
+    col1_clean <- gsub(suf1_regx, replacement = "", x = col1)
+    col2_clean <- gsub(suf2_regx, replacement = "", x = col2)
+
+    if (length(age) == 1) {
+      col1_clean <- gsub(age, replacement = age1, x = col1_clean)
+      col2_clean <- gsub(age, replacement = age2, x = col2_clean)
+    } else if (length(age) == 2) {
+      col1_clean <- gsub(age[1], replacement = age1, x = col1_clean)
+      col2_clean <- gsub(age[2], replacement = age2, x = col2_clean)
+    }
+
+    var_keep <- col2[!col2_clean %in% col1_clean]
+    var_keep <- c(col1, var_keep, "dif")
+
+    data_m <- data_m[, var_keep]
+    names(data_m)[names(data_m) %in% col1] <- col1_clean
+  }
+
+  data_m
+}
+
 ```
 
 ## Test add_delta
@@ -87,7 +212,7 @@ n <- 1L
 time <- "date"
 prefix <- paste("delta", type, n, sep = "_")
 
-add_delta <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefix = paste("delta", type, n, sep = "_")){
+add_delta_test <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefix = paste("delta", type, n, sep = "_")){
   
   # convert fill to numeric
   fill <- as.numeric(fill)
@@ -114,7 +239,9 @@ add_delta <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefi
     # if there are NA's in col_delta and no NAs in col, we know that the NA
     # in col_delta is from lag window. We want to replace these NA's. However,
     # any NA's in col_delta from due to an NA in col, we want to leave these NA.
-    dt <- dt[is.na(dt[[col_delta]]) & !dt[[col_na]], (col_delta) := (fill)]
+    dt <- dt[is.na(dt[[col_delta]]) & !dt[[col_na]], (col_delta) := (fill)
+    # Drop the na column
+             ][, (col_na) := NULL]
                       
   }
   # ----------------------------------------------------------------------------
@@ -128,7 +255,8 @@ add_delta <-function(data, cols, id, time, fill = 0, n = 1L, type = "lag", prefi
   data
 }
 
-data <- add_delta(data = data, cols = cols, id = id, time = time, fill = 0)
+
+data <- add_delta(data = data, cols = c("bw", "fat", "lean", "fluid"), id = id, time = time, fill = 0)
 ```
 
 
