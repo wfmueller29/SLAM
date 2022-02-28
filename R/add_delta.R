@@ -16,6 +16,32 @@
 #' @param prefix a character string denothing the prefix of the delta column.
 #' The column name for the new delta column will be "prefix_oldname"
 #'
+#' @examples
+#'
+#' # Example ----------------------------------------------------------------------
+#'
+#' # dplyr must be in NAMESPACE
+#' if (requireNamespace("dplyr", quietly = TRUE)) {
+#'
+#'   # merge nmr with SLAM census
+#'   data <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+#'
+#'   # checkout data
+#'   head(data)
+#'
+#'   # add delta variables with 1 time lagged differences and fill with 0
+#'   data <- add_delta(data = data,
+#'                     cols = c("bw", "fat", "lean", "fluid"),
+#'                     id = "idno",
+#'                     time = "date")
+#'
+#'   # add delta variable with 2 time lagged differences to same dataset and fill with 0
+#'   data <- add_delta(data = data,
+#'                     cols = c("bw", "fat", "lean", "fluid"),
+#'                     id = "idno",
+#'                     time = "date",
+#'                     n = 2)
+#' }
 #'
 #'
 #' @export
