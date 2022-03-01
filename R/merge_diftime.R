@@ -4,6 +4,7 @@
 #' It matches the closest measurement in data2 before, after, or before or after the
 #' measurement in data1. If a threshold is specified, it will ensure the closest measurement
 #' falls within that threshold or it will set it to missing.
+#'
 #' @param data1 a dataframe that has the ids and ages of measurement that will serve
 #' as a reference for matching with data2
 #' @param data2 a dataframe that has the ids and ages of measurement we would like to
@@ -34,6 +35,7 @@
 #' closest aged measurement for that subject in data2.
 #'
 #' @author William Mueller, Jorge Martinez Romero
+#'
 #' @examples
 #'
 #' # Example Merging clostest NMR to Glucose --------------------------------------
@@ -85,7 +87,6 @@
 #' } else {
 #'   message("Install dplyr to run this example")
 #' }
-#' @importFrom stats as.formula complete.cases
 #'
 #' @export
 
@@ -128,7 +129,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     data2 <- data2
   } else if (!is.null(vars)) {
     vars_suf <- paste0(vars, suffixes[2])
-    data2 <- data2[complete.cases(data2[vars_suf]), ]
+    data2 <- data2[stats::complete.cases(data2[vars_suf]), ]
   }
 
   # merge and create dif -------------------------------------------------------
