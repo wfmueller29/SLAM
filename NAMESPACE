@@ -2,11 +2,10 @@
 
 export(add_delta)
 export(impute_mf)
+export(merge_difdate)
 export(merge_diftime)
 export(surv_cox)
 export(surv_gethr)
 export(surv_tmerge)
 importFrom(data.table,':=')
 importFrom(data.table,.SD)
-importFrom(stats,as.formula)
-importFrom(stats,complete.cases)

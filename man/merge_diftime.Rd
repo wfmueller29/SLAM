@@ -112,6 +112,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 } else {
   message("Install dplyr to run this example")
 }
+
 }
 \author{
 William Mueller, Jorge Martinez Romero
