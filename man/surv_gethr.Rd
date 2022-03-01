@@ -128,3 +128,6 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
   print("Install dplyr to run this example")
 }
 }
+\author{
+William Mueller, Eric J. Shiroma
+}

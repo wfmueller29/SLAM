@@ -16,6 +16,8 @@
 #' @param prefix a character string denothing the prefix of the delta column.
 #' The column name for the new delta column will be "prefix_oldname"
 #'
+#' @author Jorge Martinez Romero, William Mueller
+#'
 #' @examples
 #'
 #' # Example ----------------------------------------------------------------------

@@ -121,3 +121,6 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 \seealso{
 \link[survival]{tmerge}
 }
+\author{
+William Mueller
+}

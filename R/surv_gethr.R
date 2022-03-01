@@ -10,6 +10,7 @@
 #' @param names character vector of same length as vars that provides formal names for the variables
 #' in place of variable name.
 #' @param ndec numeric that specifies the number of decimal places to round the hazard ratios
+#'
 #' @return
 #'  \item{hr_table}{
 #'  a dataframe whos rows correspond the variables inputted by the vars argument and whos names are
@@ -27,6 +28,8 @@
 #'  so that the hazard ratios for vars can be included in a kaplan meier plot.
 #'  }
 #'
+#' @author William Mueller, Eric J. Shiroma
+#' 
 #' @examples
 #' # Repeated Measures (Longitudinal) Example
 #' # Lets see how glucose predicts mortaility in SLAM

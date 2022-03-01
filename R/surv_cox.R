@@ -24,8 +24,11 @@
 #' @param tt a function that defines the time transformation that will be applied when a covariate is wrapped
 #' with the tt(). By default tt = NULL.
 #' @param type A character string that specifies the type of censoring.
+#'
 #' @return returns coxph object
 #'
+#' @author William Mueller
+#' 
 #' @examples
 #' # Repeated Measures (Longitudinal) Example
 #' # Lets see how glucose predicts mortaility in SLAM

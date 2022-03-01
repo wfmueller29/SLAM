@@ -69,3 +69,6 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 
 
 }
+\author{
+Jorge Martinez Romero, William Mueller
+}

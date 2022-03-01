@@ -113,3 +113,6 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
   message("Install dplyr to run this example")
 }
 }
+\author{
+William Mueller, Jorge Martinez Romero
+}

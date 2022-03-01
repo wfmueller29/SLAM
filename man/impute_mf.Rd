@@ -56,3 +56,6 @@ This function will allow the user to specify factor variables and variables they
 in the imputation. It will then create a data matrix to impute using missForest. It will add drop columns
 back after imputation and relabel the factor variables.
 }
+\author{
+William Mueller, Jorge Romero Martinez
+}

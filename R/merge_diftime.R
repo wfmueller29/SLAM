@@ -33,6 +33,7 @@
 #' @return a dataframe where each unique subject and age measurement in data1 is matched with the
 #' closest aged measurement for that subject in data2.
 #'
+#' @author William Mueller, Jorge Martinez Romero
 #' @examples
 #'
 #' # Example Merging clostest NMR to Glucose --------------------------------------

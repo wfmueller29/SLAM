@@ -12,6 +12,8 @@
 #' These variables will be added to the outputted dataframe, even though they are not included in the imputation.
 #' Variables to include here would be dates as missForest cannot impute dates.
 #' @param ntree number of trees to grow in each forest. Default is set to 500.
+#' @param ... Other arguments to be passed to missForest imputation, besides ntree
+#'
 #' @return A list of output similar to missForest
 #'     \item{ximp}{
 #'     a dataframe with no missing values. The resulting dataframe will be of the same size as the original data
@@ -31,8 +33,9 @@
 #'     true imputation error. This is only available if 'xtrue'
 #'     was supplied. The error measures are the same as for 'OOBerror'.
 #'     }
-#' @param ... Other arguments to be passed to missForest imputation, besides ntree
 #'
+#' @author William Mueller, Jorge Romero Martinez
+#' 
 #' @export
 
 

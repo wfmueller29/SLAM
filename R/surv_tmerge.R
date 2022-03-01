@@ -15,6 +15,8 @@
 #' @return outputs dataframe with tstart, tstop, death that can be used for time
 #' dependent survival analysis
 #'
+#' @author William Mueller
+#'
 #' @examples
 #' # Repeated Measures (Longitudinal) Example
 #' # Lets see how glucose predicts mortaility in SLAM

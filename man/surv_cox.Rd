@@ -142,3 +142,6 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 \seealso{
 \link[survival]{Surv} \link[survival]{coxph}
 }
+\author{
+William Mueller
+}
