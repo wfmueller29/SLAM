@@ -18,7 +18,7 @@ and providing a solution.
 R < 4.1 users be able to install the SLAM package easier because the current 
 missForest version is only available for R >= 4.1 users. However, this means you 
 may have to manually install the missForest package if you would like to use the 
-function “impute_mf”. This can be done using the install.packages command. 
+function `impute_mf()`. This can be done using the install.packages command. 
 
 # SLAM 0.0.3
 
