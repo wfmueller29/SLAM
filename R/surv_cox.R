@@ -28,7 +28,7 @@
 #' @return returns coxph object
 #'
 #' @author William Mueller
-#' 
+#'
 #' @examples
 #' # Repeated Measures (Longitudinal) Example
 #' # Lets see how glucose predicts mortaility in SLAM
@@ -126,7 +126,7 @@ surv_cox <- function(data, covariates, time, time2 = NULL, death, tt = NULL, typ
   } else {
     surv_object <- survival::Surv(time = data[[time]], time2 = data[[time2]], event = data[[death]])
   }
-  cox.form <- as.formula(paste0("surv_object", deparse(covariates)))
+  cox.form <- stats::as.formula(paste0("surv_object", deparse(covariates)))
 
   if (is.null(tt)) {
     fit <- survival::coxph(cox.form, data = data)

@@ -3,6 +3,8 @@
 * Added a `NEWS.md` file to track changes to the package.
 * Added installation advice to `README.md`
 * Added authors to functions and references to datasets.
+* Added first version of `merge_difdate()`. This function was built
+on the data.table. So it should be faster than `merge_diftime()`.
 
 # SLAM 0.1.0
 

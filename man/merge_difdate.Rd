@@ -33,25 +33,27 @@ in data1 and data2 have the same name, date is a character string. If the date v
 data1 and data2 are different, then date is a character vector, with the first value being the
 date variable of data1 and the second being the date variable for data2.}
 
-\item{threshold}{a numeric value that provides the difference in time between measurements
-allowed. The units of the threshold are specified in the units argument}
+\item{threshold}{a named numeric value that provides the difference in time
+between measurements allowed. The units of the threshold are specified by the
+name of threshold. Valid units are can be found in the \link[base]{difftime}
+units argument.}
 
 \item{vars}{optional character vector that provides the variable names for which this should
 be applied over. If specified, for each variable specified by var, only non-missing values will be considered
 when merging with the closest measurement date.}
 
-\item{where}{a character string that specifies where to look for the closest observation in data2
-relative to data1. "before" means that merge_diftime will look before the reference observation in data1. "after" means the same except after. "both"
-means that merge_ditime will match using observations on either side of the reference observation in data1.}
+\item{where}{a character string that specifies where to look for the closest
+observation in data2 relative to data1. "before" means that merge_difdate
+will look before the reference observation in data1. "after" means the same
+except after. "both" means that merge_difdate will match using observations
+on either side of the reference observation in data1.}
 
-\item{suffixes}{specifies the suffix for non-unique variables between the two dataframes. However,
-even if the date and id variables are unique between the two dataframes, they will be assigned
-a suffix.}
+\item{suffixes}{specifies the suffix for non-unique variables between the two
+dataframes. However, even if the date and id variables are unique between the
+two dataframes, they will be assigned a suffix.}
 
-\item{clean_vars}{default is true. Will return all data1 columns and remove any duplicate columns from
-data2 with the exception of the date column.}
-
-\item{units}{a character vector specifying the units of the threshold.}
+\item{clean_vars}{default is true. Will return all data1 columns and remove
+any duplicate columns from data2 with the exception of the date column.}
 }
 \value{
 a dataframe where each unique subject and date measurement in data1 is matched with the
