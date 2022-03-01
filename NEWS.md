@@ -2,6 +2,7 @@
 
 * Added a `NEWS.md` file to track changes to the package.
 * Added installation advice to `README.md`
+* Added authors to functions and references to datasets.
 
 # SLAM 0.1.0
 
