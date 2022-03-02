@@ -18,8 +18,6 @@ params:
 
 ```{r setup, include=FALSE}
 # libraries
-library(tidyverse)
-library(kableExtra)
 library(SLAM)
 library(yaml)
 #setting global knitr options for r markdown output
@@ -63,14 +61,12 @@ config[in_config] <- config_yaml
 names <- names(params)
 param_vec <- unlist(params)
 
-param_df <- data.frame(cbind(names, param_vec))
+param_df <- data.frame(cbind(names, param_vec), row.names = NULL)
 if(length(param_df != 0)){
   names(param_df) <- c("Param Name", "Param Value")
 }
 
-kableExtra::kable(param_df, row.names = FALSE ) %>%
-  kableExtra::kable_classic(full_width = FALSE)
-
+param_df
 ```
 
 ### Print config parameters
@@ -78,14 +74,12 @@ kableExtra::kable(param_df, row.names = FALSE ) %>%
 names <- names(config)
 config_vec <- unlist(config)
 
-config_df <- data.frame(cbind(names, config_vec))
+config_df <- data.frame(cbind(names, config_vec), row.names = NULL)
 if(length(config_df != 0)){
   names(config_df) <- c("Config Name", "Config Value")
 }
 
-kableExtra::kable(config_df, row.names = FALSE ) %>%
-  kableExtra::kable_classic(full_width = FALSE)
-
+config_df
 ```
 
 # Analysis
