@@ -64,7 +64,7 @@ merge_difdate <- function(data1, data2, id, date, threshold = c("weeks" = Inf), 
     id2 <- paste0(id, suffixes[2])
   } else if (length(id) == 2) {
     id1 <- paste0(id[1], suffixes[1])
-    id2 <- paste0(id[2], suffixes[1])
+    id2 <- paste0(id[2], suffixes[2])
   } else {
     stop("id must be length 1 or 2")
   }
@@ -75,7 +75,7 @@ merge_difdate <- function(data1, data2, id, date, threshold = c("weeks" = Inf), 
     date2 <- paste0(date, suffixes[2])
   } else if (length(date) == 2) {
     date1 <- paste0(date[1], suffixes[1])
-    date2 <- paste0(date[2], suffixes[1])
+    date2 <- paste0(date[2], suffixes[2])
   } else {
     stop("date must be length 1 or 2")
   }
