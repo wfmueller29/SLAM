@@ -5,6 +5,7 @@
 * Added authors to functions and references to datasets.
 * Added first version of `merge_difdate()`. This function was built
 on the data.table. So it should be faster than `merge_diftime()`.
+* Fixed `merge_diftime()` and `merge_difdate()` bug if two dates are provided. 
 
 # SLAM 0.1.0
 

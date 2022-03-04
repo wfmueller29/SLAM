@@ -107,7 +107,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     id2 <- paste0(id, suffixes[2])
   } else if (length(id) == 2) {
     id1 <- paste0(id[1], suffixes[1])
-    id2 <- paste0(id[2], suffixes[1])
+    id2 <- paste0(id[2], suffixes[2])
   } else {
     stop("id must be length 1 or 2")
   }
@@ -118,7 +118,7 @@ merge_diftime <- function(data1, data2, id, age, threshold = Inf, vars = NULL, w
     age2 <- paste0(age, suffixes[2])
   } else if (length(age) == 2) {
     age1 <- paste0(age[1], suffixes[1])
-    age2 <- paste0(age[2], suffixes[1])
+    age2 <- paste0(age[2], suffixes[2])
   } else {
     stop("age must be length 1 or 2")
   }
