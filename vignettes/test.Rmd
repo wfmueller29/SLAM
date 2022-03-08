@@ -449,4 +449,4 @@ merge_difdate <- function(data1, data2, id, date, threshold = c("weeks" = Inf), 
 
 ```
 
-
+## Test `vis_mfreq()`
