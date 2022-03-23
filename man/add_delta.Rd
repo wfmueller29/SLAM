@@ -26,8 +26,8 @@ function to}
 \item{time}{a character stirng the time variable}
 
 \item{fill}{numeric or NA to specifying what to fill the values that fall
-outside the offset window. For example, if we ar taking lagged differences, this
-will set the value of the firt observation.}
+outside the offset window. For example, if we ar taking lagged differences,
+this will set the value of the firt observation.}
 
 \item{n}{number of steps to alter rolling difference window}
 
@@ -42,7 +42,7 @@ and dataframe. It will also skip NA values in the calculation of the delta.
 }
 \examples{
 
-# Example ----------------------------------------------------------------------
+# Example ------------------------------------------------------------------
 
 # dplyr must be in NAMESPACE
 if (requireNamespace("dplyr", quietly = TRUE)) {
@@ -59,7 +59,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
                     id = "idno",
                     time = "date")
 
-  # add delta variable with 2 time lagged differences to same dataset and fill with 0
+  # add delta variable with 2 time lagged differences and fill with 0
   data <- add_delta(data = data,
                     cols = c("bw", "fat", "lean", "fluid"),
                     id = "idno",

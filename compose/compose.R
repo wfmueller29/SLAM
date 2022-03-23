@@ -257,35 +257,45 @@ add_delta <- function(data,
 
     # data table chain ---------------------------------------------------------
     # create col_na that is true if col is NA and false otherwise
-    dt <- dt[, (col_na) := lapply(.SD, is.na),
-      .SDcols = col
-      # order dt by time so that rolling differences are taken properly
-    ][
-      order(dt[[time]])
-      # create delta variable using n and type args specified in function call.
-      # the dt is grouped by id and col_na so that delta calculation will "skip"
-      # dates when there is NAs
-    ][, (col_delta) := .SD - data.table::shift(
-                                               x = .SD,
-                                               n = n,
-                                               fill = NA,
-                                               type = type
-                                               ),
-                          keyby = c(id, col_na),
-                          .SDcols = col
-                          ]
+    data.table::set(dt,
+                    i = NULL,
+                    j = eval(col_na),
+                    value = sapply(dt[[col]], is.na)
+                    )
+    # order dt by time so that rolling differences are taken properly
+    data.table::setorderv(dt, cols = eval(time))
+    # create delta variable using n and type args specified in function call.
+    # the dt is grouped by id and col_na so that delta calculation will "skip"
+    # dates when there is NAs
+    data.table::setkeyv(dt, cols = c(id, col_na))
+    data.table::set(dt,
+                    i = NULL,
+                    j = eval(col_delta),
+                    value = dt[[col]] - data.table::shift(x = dt[[col]],
+                                                          n = n,
+                                                          fill = NA,
+                                                          type = type)
+                    )
     # if there are NA's in col_delta and no NAs in col, we know that the NA
     # in col_delta is from lag window. We want to replace these NA's. However,
     # any NA's in col_delta from due to an NA in col, we want to leave these NA.
-    dt <- dt[
-      is.na(dt[[col_delta]]) & !dt[[col_na]], (col_delta) := (fill)
-      # Drop the na column
-    ][, (col_na) := NULL]
+    replace_rows <- which(is.na(dt[[col_delta]]) & !dt[[col_na]])
+    data.table::set(dt,
+                    i = eval(replace_rows),
+                    j = eval(col_delta),
+                    value = eval(fill)
+                    )
+    # Drop the na column
+    data.table::set(dt,
+                    i = NULL,
+                    j = eval(col_na),
+                    value = NULL
+                    )
   }
   # ----------------------------------------------------------------------------
 
   # reorder by id and time because currently order by time, id, and col_na
-  dt <- data.table::setorderv(x = dt, col = c(id, time))
+  data.table::setorderv(x = dt, col = c(id, time))
   # convert data.table to dataframe
   data <- as.data.frame(dt)
 
