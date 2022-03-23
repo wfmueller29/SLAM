@@ -8,20 +8,20 @@
 #' @param x - this is the GROUPING (e.g. sex)
 #' @param by - this is the facet_wrap that appears as the x-axis (e.g. age in months)
 #' @param title - OPTIONALnplot title
-#' @param bar_color - OPTIONAL color of histogram bars indicating averages (you could switch it, it is just the parameter you pass to 'geom'). Needs to be the same length as unique(data$x)
+#' @param bar_color - OPTIONAL color of bars indicating averages (you could switch it, it is just the parameter you pass to 'geom'). Needs to be the same length as unique(data$x)
 #' @param point_color - OPTIONAL color of points. List needs to be the same length as bar_color. Default is black
 #' @param errorbar_color - OPTIONAL color of errorbars (standard deviation). Default is grey4 (almost black)
 #' @param geom - OPTIONAL to pass to 'geom'. Default is bar
 #' @param points - OPTIONAL. Default is TRUE. Whether or not it shows points
 #' @param percentile - this refers to which points you don't want to plot. For example, if it is set to 0.05, meaning that 5% of 
 #' highest and 5% of lowest points don't get plotted. Default is 0, so no points get removed
-#' @param color_by - OPTIONAL, do you want to color the histograms by x or by the by variable? Default is x
+#' @param color_by - OPTIONAL, do you want to color the by x or by the by variable? Default is x
 #' 
 #' @return Plot
 #' @export
 
 
-histoplot <- function(
+plot_bar <- function(
   data, x, y, by, title = '', 
   bar_color, point_color = 'black', errorbar_color = 'grey4', 
   geom = 'bar', points = TRUE, percentile = 0, color_by = x

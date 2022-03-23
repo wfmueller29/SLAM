@@ -25,7 +25,7 @@
 #' @return Plot
 #' @export
 
-longplot <- function(
+plot_long <- function(
   data, x, y, by, title, xlab, ylab, xlow, xhigh, ylow, yhigh, color1, color2 = color1,
   percentile = 0.00, show_max=FALSE, span = 0.75
   ) { 

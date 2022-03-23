@@ -17,7 +17,7 @@
 #'
 
 
-vis_mfreq <- function(data, id, ...){
+plot_mfreq <- function(data, id, ...){
   data <- data.table::as.data.table(data)
   j <- quote(.N)
   by <- id
