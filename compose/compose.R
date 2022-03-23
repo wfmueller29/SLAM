@@ -1,10 +1,3 @@
-## ---- include = FALSE---------------------------------------------------------
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-
-
 ## ----setup--------------------------------------------------------------------
 library(SLAM)
 library(dplyr)
@@ -157,6 +150,7 @@ merge_diftime <- function(data1,
   data_m$dif <- data_m[[age2]] - data_m[[age1]]
 
   # look for closest date ------------------------------------------------------
+  get_class <- function(col) class(data_m[[col]])
   # where to check for closest date
   if (where == "both") {
     data_m <- data_m[order(data_m[[id1]], abs(data_m$dif)), , drop = FALSE]
@@ -164,7 +158,7 @@ merge_diftime <- function(data1,
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
     data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
-    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
+    data2_cols <- data2_cols[sapply(data2_cols, get_class) != "Date"]
     data_m[, data2_cols] <- lapply(data2_cols, function(name) {
       if (class(data_m[, name]) != "Date") {
         ifelse(abs(data_m$dif) > threshold, NA, data_m[, name])
@@ -177,7 +171,7 @@ merge_diftime <- function(data1,
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
     data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
-    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
+    data2_cols <- data2_cols[sapply(data2_cols, get_class) != "Date"]
     data_m[, data2_cols] <- lapply(data2_cols, function(name) {
       ifelse(data_m$dif * -1 > threshold, NA, data_m[, name])
     })
@@ -188,7 +182,7 @@ merge_diftime <- function(data1,
     data_m <- data_m[!duplicated(df_dups), , drop = FALSE]
     # threshold
     data2_cols <- names(data_m)[grepl(paste0(suffixes[2], "$"), names(data_m))]
-    data2_cols <- data2_cols[sapply(data2_cols, function(col) class(data_m[[col]])) != "Date"]
+    data2_cols <- data2_cols[sapply(data2_cols, get_class) != "Date"]
     data_m[, data2_cols] <- lapply(data2_cols, function(name) {
       ifelse(data_m$dif > threshold, NA, data_m[, name])
     })
@@ -239,7 +233,7 @@ n <- 1L
 time <- "date"
 prefix <- paste("delta", type, n, sep = "_")
 
-add_delta_test <- function(data,
+add_delta <- function(data,
                            cols,
                            id,
                            time,
@@ -268,10 +262,18 @@ add_delta_test <- function(data,
       # order dt by time so that rolling differences are taken properly
     ][
       order(dt[[time]])
-      # create delta variable using n and type arguments specified in function call.
+      # create delta variable using n and type args specified in function call.
       # the dt is grouped by id and col_na so that delta calculation will "skip"
       # dates when there is NAs
-    ][, (col_delta) := .SD - data.table::shift(x = .SD, n = n, fill = NA, type = type), keyby = c(id, col_na), .SDcols = col]
+    ][, (col_delta) := .SD - data.table::shift(
+                                               x = .SD,
+                                               n = n,
+                                               fill = NA,
+                                               type = type
+                                               ),
+                          keyby = c(id, col_na),
+                          .SDcols = col
+                          ]
     # if there are NA's in col_delta and no NAs in col, we know that the NA
     # in col_delta is from lag window. We want to replace these NA's. However,
     # any NA's in col_delta from due to an NA in col, we want to leave these NA.
@@ -316,7 +318,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
     time = "date"
   )
 
-  # add delta variable with 2 time lagged differences to same dataset and fill with 0
+  # add delta variable with 2 time lagged differences and fill with 0
   data <- add_delta(
     data = data,
     cols = c("bw", "fat", "lean", "fluid"),
@@ -500,8 +502,9 @@ merge_difdate <- function(data1,
   dtm <- eval(as.call(list(unique, x = as.symbol("dtm"), by = c(id1, date1))))
 
   # threshold
+  get_class <- function(col) class(data_m[[col]])
   dt2_cols <- names(dtm)[grepl(paste0(suffixes[2], "$"), names(dtm))]
-  dt2_cols_not_date <- dt2_cols[sapply(dt2_cols, function(col) class(dtm[[col]])) != "Date"]
+  dt2_cols_not_date <- dt2_cols[sapply(dt2_cols, get_class) != "Date"]
   dtm <- dtm[dif_ef > eval(threshold[[1]]), (dt2_cols_not_date) := NA]
 
 
@@ -528,7 +531,9 @@ merge_difdate <- function(data1,
     var_keep <- c(col1, col2_var_keep, "dif")
 
     dtm <- dtm[, .SD, .SDcols = var_keep]
-    names(dtm) <- c(col1_clean, col2_clean_var_keep, paste0("dif_", names(threshold)))
+    names(dtm) <- c(col1_clean,
+                    col2_clean_var_keep,
+                    paste0("dif_", names(threshold)))
   }
 
   # return as.data.frame-------------------------------------------------------
