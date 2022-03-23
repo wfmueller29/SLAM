@@ -94,6 +94,8 @@ add_delta <- function(data,
                                                           fill = NA,
                                                           type = type)
                     )
+    # remove key
+    data.table::setkey(dt, NULL)
     # if there are NA's in col_delta and no NAs in col, we know that the NA
     # in col_delta is from lag window. We want to replace these NA's. However,
     # any NA's in col_delta from due to an NA in col, we want to leave these NA.
