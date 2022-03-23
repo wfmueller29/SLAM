@@ -17,98 +17,131 @@ merge_diftime(
 )
 }
 \arguments{
-\item{data1}{a dataframe that has the ids and ages of measurement that will serve
-as a reference for matching with data2}
+\item{data1}{a dataframe that has the ids and ages of measurement that will
+serve as a reference for matching with data2}
 
-\item{data2}{a dataframe that has the ids and ages of measurement we would like to
-match with the reference id's and dates and data1}
+\item{data2}{a dataframe that has the ids and ages of measurement we would
+like to match with the reference id's and dates and data1}
 
-\item{id}{either a character string, or a character vector of length 2. If the id variable
-in data1 and data2 have the same name, id is a character string. If the id variable of
-data1 and data2 are different, then id is a character vector, with the first value being the
-id variable of data1 and the second being the id variable for data2.}
+\item{id}{either a character string, or a character vector of length 2. If
+the id variable in data1 and data2 have the same name, id is a character
+string. If the id variable of data1 and data2 are different, then id is a
+character vector, with the first value being the id variable of data1 and
+the second being the id variable for data2.}
 
-\item{age}{either a character string, or a character vector of length 2. If the age variable
-in data1 and data2 have the same name, age is a character string. If the age variable of
-data1 and data2 are different, then age is a character vector, with the first value being the
-age variable of data1 and the second being the age variable for data2.}
+\item{age}{either a character string, or a character vector of length 2.
+If the age variable in data1 and data2 have the same name, age is a character
+string. If the age variable of data1 and data2 are different, then age is a
+character vector, with the first value being the age variable of data1 and
+the second being the age variable for data2.}
 
-\item{threshold}{a numeric value that provides the difference in time between measurements
-allowed. The numeric should be in the same units of age.}
+\item{threshold}{a numeric value that provides the difference in time
+between measurements allowed. The numeric should be in the same units of
+age.}
 
-\item{vars}{optional character vector that provides the variable names for which this should
-be applied over. If specified, for each variable specified by var, only non-missing values will be considered
-when merging with the closest measurement date.}
+\item{vars}{optional character vector that provides the variable names for
+which this should be applied over. If specified, for each variable specified
+by var, only non-missing values will be considered when merging with the
+closest measurement date.}
 
-\item{where}{a character string that specifies where to look for the closest observation in data2
-relative to data1. "before" means that merge_diftime will look before the reference observation in data1. "after" means the same except after. "both"
-means that merge_ditime will match using observations on either side of the reference observation in data1.}
+\item{where}{a character string that specifies where to look for the closest
+observation in data2 relative to data1. "before" means that merge_diftime
+will look before the reference observation in data1. "after" means the same
+except after. "both" means that merge_ditime will match using observations
+on either side of the reference observation in data1.}
 
-\item{suffixes}{specifies the suffix for non-unique variables between the two dataframes. However,
-even if the age and id variables are unique between the two dataframes, they will be assigned
-a suffix.}
+\item{suffixes}{specifies the suffix for non-unique variables between the
+two dataframes. However, even if the age and id variables are unique between
+the two dataframes, they will be assigned a suffix.}
 
-\item{clean_vars}{default is true. Will return all data1 columns and remove any duplicate columns from
-data2 with the exception of the age column.}
+\item{clean_vars}{default is true. Will return all data1 columns and remove
+any duplicate columns from data2 with the exception of the age column.}
 }
 \value{
-a dataframe where each unique subject and age measurement in data1 is matched with the
-closest aged measurement for that subject in data2.
+a dataframe where each unique subject and age measurement in data1
+is matched with the closest aged measurement for that subject in data2.
 }
 \description{
-Functions that merges two dataframes that have measurements at different ages.
-It matches the closest measurement in data2 before, after, or before or after the
-measurement in data1. If a threshold is specified, it will ensure the closest measurement
-falls within that threshold or it will set it to missing.
+Functions that merges two dataframes that have measurements at different
+ages. It matches the closest measurement in data2 before, after, or before
+or after the measurement in data1. If a threshold is specified, it will
+ensure the closest measurement falls within that threshold or it will set
+it to missing.
 }
 \examples{
 
-# Example Merging clostest NMR to Glucose --------------------------------------
+# Example Merging clostest NMR to Glucose ----------------------------------
 
 if (requireNamespace("dplyr", quietly = TRUE)) {
-  # Checkout data --------------------------------------------------------------
-  # Checkout census
-  head(data_SLAM_census)
+# Checkout data ------------------------------------------------------------
+# Checkout census
+head(data_SLAM_census)
 
-  # Checkout glucose
-  head(data_SLAM_gluc)
+# Checkout glucose
+head(data_SLAM_gluc)
 
-  # Checkout nmr
-  head(data_SLAM_nmr)
+# Checkout nmr
+head(data_SLAM_nmr)
 
-  # Create gluc ----------------------------------------------------------------
-  # join glucose and census for dob and other infor
-  gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
-  # drop useless vars
-  gluc <- dplyr::select(gluc, -c(lact, cohort, animal_id, tag, taghistory, cage, eartag, name, X))
-  # create age for merging and format data so it makes sense
-  gluc <- dplyr::mutate(gluc,
-    age_wk = difftime(date, dob, units = "weeks"),
-    date = as.Date(date, "\%m\%d\%Y")
+# Create gluc --------------------------------------------------------------
+# join glucose and census for dob and other infor
+gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
+# drop useless vars
+gluc <- dplyr::select(
+  gluc,
+  -c(
+    lact,
+    cohort,
+    animal_id,
+    tag,
+    taghistory,
+    cage,
+    eartag,
+    name,
+    X
   )
+)
+# create age for merging and format data so it makes sense
+gluc <- dplyr::mutate(gluc,
+  age_wk = difftime(date, dob, units = "weeks"),
+  date = as.Date(date, "\%m\%d\%Y")
+)
 
-  # Create nmr -----------------------------------------------------------------
-  # join nmr with census for dob and other info
-  nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
-  # drop useless columns
-  nmr <- dplyr::select(nmr, -c(cohort, animal_id, tag, taghistory, cage, eartag, name, X))
-  # create age for merging and format data so it makes sense
-  nmr <- dplyr::mutate(nmr,
-    age_wk = difftime(date, dob, units = "weeks"),
-    date = as.Date(date, "\%m\%d\%Y")
+# Create nmr ---------------------------------------------------------------
+# join nmr with census for dob and other info
+nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+# drop useless columns
+nmr <- dplyr::select(
+  nmr,
+  -c(
+    cohort,
+    animal_id,
+    tag,
+    taghistory,
+    cage,
+    eartag,
+    name,
+    X
   )
+)
+# create age for merging and format data so it makes sense
+nmr <- dplyr::mutate(nmr,
+  age_wk = difftime(date, dob, units = "weeks"),
+  date = as.Date(date, "\%m\%d\%Y")
+)
 
-  # Use merge_diftime ----------------------------------------------------------
-  gluc_nmr <- merge_diftime(
-    data1 = gluc,
-    data2 = nmr,
-    id = "idno",
-    age = "age_wk",
-    vars = c("bw", "lean", "fluid", "fat")
-  )
+# Use merge_diftime --------------------------------------------------------
+gluc_nmr <- merge_diftime(
+  data1 = gluc,
+  data2 = nmr,
+  id = "idno",
+  age = "age_wk",
+  vars = c("bw", "lean", "fluid", "fat"),
+  clean_vars = FALSE
+)
 
-  # Checkout results
-  head(gluc_nmr)
+# Checkout results
+head(gluc_nmr)
 } else {
   message("Install dplyr to run this example")
 }

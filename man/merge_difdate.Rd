@@ -17,30 +17,33 @@ merge_difdate(
 )
 }
 \arguments{
-\item{data1}{a dataframe that has the ids and dates of measurement that will serve
-as a reference for matching with data2}
+\item{data1}{a dataframe that has the ids and dates of measurement that will
+serve as a reference for matching with data2}
 
-\item{data2}{a dataframe that has the ids and dates of measurement we would like to
-match with the reference id's and dates and data1}
+\item{data2}{a dataframe that has the ids and dates of measurement we would
+like to match with the reference id's and dates and data1}
 
-\item{id}{either a character string, or a character vector of length 2. If the id variable
-in data1 and data2 have the same name, id is a character string. If the id variable of
-data1 and data2 are different, then id is a character vector, with the first value being the
-id variable of data1 and the second being the id variable for data2.}
+\item{id}{either a character string, or a character vector of length 2. If
+the id variable in data1 and data2 have the same name, id is a character
+string. If the id variable of data1 and data2 are different, then id is a
+character vector, with the first value being the id variable of data1 and
+the second being the id variable for data2.}
 
-\item{date}{either a character string, or a character vector of length 2. If the date variable
-in data1 and data2 have the same name, date is a character string. If the date variable of
-data1 and data2 are different, then date is a character vector, with the first value being the
-date variable of data1 and the second being the date variable for data2.}
+\item{date}{either a character string, or a character vector of length 2.
+If the date variable in data1 and data2 have the same name, date is a
+character string. If the date variable of data1 and data2 are different,
+then date is a character vector, with the first value being the date
+variable of data1 and the second being the date variable for data2.}
 
 \item{threshold}{a named numeric value that provides the difference in time
-between measurements allowed. The units of the threshold are specified by the
-name of threshold. Valid units are can be found in the \link[base]{difftime}
-units argument.}
+between measurements allowed. The units of the threshold are specified by
+the name of threshold. Valid units are can be found in the
+\link[base]{difftime} units argument.}
 
-\item{vars}{optional character vector that provides the variable names for which this should
-be applied over. If specified, for each variable specified by var, only non-missing values will be considered
-when merging with the closest measurement date.}
+\item{vars}{optional character vector that provides the variable names for
+which this should be applied over. If specified, for each variable specified
+by var, only non-missing values will be considered when merging with the
+closest measurement date.}
 
 \item{where}{a character string that specifies where to look for the closest
 observation in data2 relative to data1. "before" means that merge_difdate
@@ -48,22 +51,24 @@ will look before the reference observation in data1. "after" means the same
 except after. "both" means that merge_difdate will match using observations
 on either side of the reference observation in data1.}
 
-\item{suffixes}{specifies the suffix for non-unique variables between the two
-dataframes. However, even if the date and id variables are unique between the
-two dataframes, they will be assigned a suffix.}
+\item{suffixes}{specifies the suffix for non-unique variables between the
+two dataframes. However, even if the date and id variables are unique between
+the two dataframes, they will be assigned a suffix.}
 
 \item{clean_vars}{default is true. Will return all data1 columns and remove
 any duplicate columns from data2 with the exception of the date column.}
 }
 \value{
-a dataframe where each unique subject and date measurement in data1 is matched with the
-closest dated measurement for that subject in data2.
+a dataframe where each unique subject and date measurement
+in data1 is matched with the closest dated measurement for that subject in
+data2.
 }
 \description{
-Functions that merges two dataframes that have measurements at different dates
-It matches the closest measurement in data2 before, after, or before or after the
-measurement in data1. If a threshold is specified, it will ensure the closest measurement
-falls within that threshold or it will set it to missing.
+Functions that merges two dataframes that have measurements at different
+dates. It matches the closest measurement in data2 before, after, or before
+or after the measurement in data1. If a threshold is specified, it will
+ensure the closest measurement falls within that threshold or it will set it
+to missing.
 }
 \author{
 William Mueller, Jorge Martinez Romero
