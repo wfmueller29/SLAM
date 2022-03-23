@@ -1,5 +1,10 @@
 # SLAM (development version)
 
+# SLAM 0.1.0.9001
+
+* refactored R/add_delta.R
+* longplot and histoplot from Remy were added
+
 # SLAM 0.1.0.9000
 
 * Added a `NEWS.md` file to track changes to the package.
