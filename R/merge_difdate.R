@@ -43,6 +43,9 @@
 #' in data1 is matched with the closest dated measurement for that subject in
 #' data2.
 #'
+#' @example
+#'
+#'
 #' @author William Mueller, Jorge Martinez Romero
 #'
 #' @export
@@ -96,7 +99,7 @@ merge_difdate <- function(data1,
     dt2 <- dt2
   } else if (!is.null(vars)) {
     vars_suf <- paste0(vars, suffixes[2])
-    complete_cases <- stats::complete.cases(dt[, vars_suf, with = FALSE])
+    complete_cases <- stats::complete.cases(dt2[, vars_suf, with = FALSE])
     dt2 <- dt2[complete_cases]
   }
 
