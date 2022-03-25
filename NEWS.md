@@ -2,8 +2,11 @@
 
 # SLAM 0.1.0.9001
 
-* refactored R/add_delta.R
+* refactored `add_delta()`, `merge_difdate()`, `merge_diftime()`
 * longplot and histoplot from Remy were added
+* `longplot()` renamed to `plot_long()`
+* `histoplot()` renamed to `plot_bar()`
+* `plot_mfreq()` added
 
 # SLAM 0.1.0.9000
 
