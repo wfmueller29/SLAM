@@ -43,9 +43,6 @@
 #' in data1 is matched with the closest dated measurement for that subject in
 #' data2.
 #'
-#' @example
-#'
-#'
 #' @author William Mueller, Jorge Martinez Romero
 #'
 #' @export
