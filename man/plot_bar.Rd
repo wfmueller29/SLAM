@@ -24,30 +24,44 @@ plot_bar(
 
 \item{x}{- this is the GROUPING (e.g. sex)}
 
-\item{by}{- this is the facet_wrap that appears as the x-axis (e.g. age in months)}
+\item{y}{- this is the outcome variable}
+
+\item{by}{- this is the facet_wrap that appears as the x-axis
+(e.g. age in months)}
 
 \item{title}{- OPTIONALnplot title}
 
-\item{bar_color}{- OPTIONAL color of bars indicating averages (you could switch it, it is just the parameter you pass to 'geom'). Needs to be the same length as unique(data$x)}
+\item{bar_color}{- OPTIONAL color of bars indicating averages (you could
+switch it, it is just the parameter you pass to 'geom'). Needs to be the
+same length as unique(data$x)}
 
-\item{point_color}{- OPTIONAL color of points. List needs to be the same length as bar_color. Default is black}
+\item{point_color}{- OPTIONAL color of points. List needs to be the same
+length as bar_color. Default is black}
 
-\item{errorbar_color}{- OPTIONAL color of errorbars (standard deviation). Default is grey4 (almost black)}
+\item{errorbar_color}{- OPTIONAL color of errorbars (standard deviation).
+Default is grey4 (almost black)}
 
 \item{geom}{- OPTIONAL to pass to 'geom'. Default is bar}
 
 \item{points}{- OPTIONAL. Default is TRUE. Whether or not it shows points}
 
-\item{percentile}{- this refers to which points you don't want to plot. For example, if it is set to 0.05, meaning that 5% of 
-highest and 5% of lowest points don't get plotted. Default is 0, so no points get removed}
+\item{percentile}{- this refers to which points you don't want to plot.
+For example, if it is set to 0.05, meaning that 5% of  highest and 5% of
+lowest points don't get plotted. Default is 0, so no points get removed}
 
-\item{color_by}{- OPTIONAL, do you want to color the by x or by the by variable? Default is x}
+\item{color_by}{- OPTIONAL, do you want to color the by x or by the by
+variable? Default is x}
 }
 \value{
 Plot
 }
 \description{
-Function takes in a database, and plots points based on 3 variables - y-axis, x-axis, and grouping.
-Function calculates standard deviations and means by group and point on x-axis. Only y-axis needs to be numeric,
-but if you want to ensure the x-axis are ordered correctly, I suggest ordering it before plotting
+Function takes in a database, and plots points based on 3
+variables - y-axis, x-axis, and grouping. Function calculates standard
+deviations and means by group and point on x-axis. Only y-axis needs to be
+numeric, but if you want to ensure the x-axis are ordered correctly, I
+suggest ordering it before plotting
+}
+\author{
+.....
 }
