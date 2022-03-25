@@ -21,7 +21,7 @@ plot_mfreq <- function(data, id, ...){
   data <- data.table::as.data.table(data)
   j <- quote(.N)
   by <- id
-  cl <- quote(data[, j = eval(j), by = eval(by)][,N])
+  cl <- quote(data[, j = eval(j), by = eval(by)][, N])
   count <- eval(cl)
-  barplot(table(count), xlab = "Observations per idno", ...)
+  graphics::barplot(table(count), xlab = "Observations per idno", ...)
 }
