@@ -47,6 +47,8 @@ plot_bar <- function(data,
                      percentile = 0,
                      color_by = x) {
 
+  # so that devtools::check() works
+  means <- st_dev <- NULL
 
   # shortening amount of writing to do
   dd <- data[[x]]
