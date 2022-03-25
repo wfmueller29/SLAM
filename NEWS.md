@@ -1,8 +1,15 @@
 # SLAM 0.2.0
 
 * New Functions
-    - `plot_long()` added by Remy
-    - `plot_bar()` added by Remy
+    - `plot_long()` Function takes in data, and plots points and lines
+longitudinally, using loess (you can change span, but it is set to default)
+You can also choose to show the local maximum for analytical purposes. Thank
+you Remy!
+    - `plot_bar()` Function takes in a database, and plots points based on 3                  thank you Remy!
+variables - y-axis, x-axis, and grouping. Function calculates standard
+deviations and means by group and point on x-axis. Only y-axis needs to be
+numeric, but if you want to ensure the x-axis are ordered correctly, I
+suggest ordering it before plotting. Thank you Remy! 
     - `plot_mfreq()`
 * Refactored Functions
     - `add_delta()`
