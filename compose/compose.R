@@ -9,13 +9,13 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
   # Checkout data --------------------------------------------------------------
   # Checkout census
   head(data_SLAM_census)
-  
+
   # Checkout glucose
   head(data_SLAM_gluc)
-  
+
   # Checkout nmr
   head(data_SLAM_nmr)
-  
+
   # Create gluc ----------------------------------------------------------------
   # join glucose and census for dob and other infor
   gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
@@ -39,7 +39,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
     age_wk = difftime(date, dob, units = "weeks"),
     date = as.Date(date, "%m%d%Y")
   )
-  
+
   # Create nmr -----------------------------------------------------------------
   # join nmr with census for dob and other info
   nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
@@ -62,7 +62,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
     age_wk = difftime(date, dob, units = "weeks"),
     date = as.Date(date, "%m%d%Y")
   )
-  
+
   # Use merge_diftime ----------------------------------------------------------
   gluc_nmr <- merge_diftime(
     data1 = gluc,
@@ -72,7 +72,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
     vars = c("bw", "lean", "fluid", "fat"),
     clean_vars = FALSE
   )
-  
+
   # Checkout results
   head(gluc_nmr)
 } else {
@@ -146,11 +146,12 @@ merge_diftime <- function(data1,
 
   # merge and create dif -------------------------------------------------------
   dtm <- merge(dt1,
-               dt2,
-               by.x = id1,
-               by.y = id2,
-               all.x = TRUE,
-               allow.cartesian = TRUE)
+    dt2,
+    by.x = id1,
+    by.y = id2,
+    all.x = TRUE,
+    allow.cartesian = TRUE
+  )
 
   # dif tells use time difference and direction
   dtm$dif <- dtm[[age2]] - dtm[[age1]]
@@ -168,7 +169,7 @@ merge_diftime <- function(data1,
   }
 
   data.table::setorderv(dtm, cols = c(id1, "dif_ef"))
-  
+
   dtm <- base::unique(dtm, by = c(eval(id1), eval(age1)))
 
   # threshold
@@ -177,10 +178,10 @@ merge_diftime <- function(data1,
   dt2_cols_not_date <- dt2_cols[sapply(dt2_cols, get_class) != "Date"]
   set_na_row <- which(dtm$dif_ef > threshold[[1]])
   data.table::set(dtm,
-                  i = eval(set_na_row),
-                  j = dt2_cols_not_date,
-                  value = NA
-                  )
+    i = eval(set_na_row),
+    j = dt2_cols_not_date,
+    value = NA
+  )
 
   # clean vars -----------------------------------------------------------------
   if (isTRUE(clean_vars)) {
@@ -205,9 +206,11 @@ merge_diftime <- function(data1,
     var_keep <- c(col1, col2_var_keep, "dif")
 
     dtm <- dtm[, var_keep, with = FALSE]
-    names(dtm) <- c(col1_clean,
-                    col2_clean_var_keep,
-                    paste0("dif_", names(threshold)))
+    names(dtm) <- c(
+      col1_clean,
+      col2_clean_var_keep,
+      paste0("dif_", names(threshold))
+    )
   }
 
   # return as.data.frame-------------------------------------------------------
@@ -230,13 +233,13 @@ time <- "date"
 prefix <- paste("delta", type, n, sep = "_")
 
 add_delta <- function(data,
-                           cols,
-                           id,
-                           time,
-                           fill = 0,
-                           n = 1L,
-                           type = "lag",
-                           prefix = paste("delta", type, n, sep = "_")) {
+                      cols,
+                      id,
+                      time,
+                      fill = 0,
+                      n = 1L,
+                      type = "lag",
+                      prefix = paste("delta", type, n, sep = "_")) {
 
   # convert fill to numeric
   fill <- as.numeric(fill)
@@ -254,10 +257,10 @@ add_delta <- function(data,
     # data table chain ---------------------------------------------------------
     # create col_na that is true if col is NA and false otherwise
     data.table::set(dt,
-                    i = NULL,
-                    j = eval(col_na),
-                    value = sapply(dt[[col]], is.na)
-                    )
+      i = NULL,
+      j = eval(col_na),
+      value = sapply(dt[[col]], is.na)
+    )
     # order dt by time so that rolling differences are taken properly
     data.table::setorderv(dt, cols = eval(time))
     # create delta variable using n and type args specified in function call.
@@ -265,13 +268,15 @@ add_delta <- function(data,
     # dates when there is NAs
     data.table::setkeyv(dt, cols = c(id, col_na))
     data.table::set(dt,
-                    i = NULL,
-                    j = eval(col_delta),
-                    value = dt[[col]] - data.table::shift(x = dt[[col]],
-                                                          n = n,
-                                                          fill = NA,
-                                                          type = type)
-                    )
+      i = NULL,
+      j = eval(col_delta),
+      value = dt[[col]] - data.table::shift(
+        x = dt[[col]],
+        n = n,
+        fill = NA,
+        type = type
+      )
+    )
     # remove key
     data.table::setkey(dt, NULL)
     # if there are NA's in col_delta and no NAs in col, we know that the NA
@@ -279,16 +284,16 @@ add_delta <- function(data,
     # any NA's in col_delta from due to an NA in col, we want to leave these NA.
     replace_rows <- which(is.na(dt[[col_delta]]) & !dt[[col_na]])
     data.table::set(dt,
-                    i = eval(replace_rows),
-                    j = eval(col_delta),
-                    value = eval(fill)
-                    )
+      i = eval(replace_rows),
+      j = eval(col_delta),
+      value = eval(fill)
+    )
     # Drop the na column
     data.table::set(dt,
-                    i = NULL,
-                    j = eval(col_na),
-                    value = NULL
-                    )
+      i = NULL,
+      j = eval(col_na),
+      value = NULL
+    )
   }
   # ----------------------------------------------------------------------------
 
@@ -301,11 +306,13 @@ add_delta <- function(data,
   data
 }
 
-data <- add_delta(data = data,
-                  cols = c("bw", "fat", "lean", "fluid"),
-                  id = id,
-                  time = time,
-                  fill = 0)
+data <- add_delta(
+  data = data,
+  cols = c("bw", "fat", "lean", "fluid"),
+  id = id,
+  time = time,
+  fill = 0
+)
 
 # Example ----------------------------------------------------------------------
 
@@ -334,7 +341,10 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
     time = "date",
     n = 2
   )
+} else {
+  message("Install dplyr to run this example")
 }
+
 
 
 ## ----merge_difdate------------------------------------------------------------
@@ -344,49 +354,58 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
   # Checkout data --------------------------------------------------------------
   # Checkout census
   head(data_SLAM_census)
-  
+
   # Checkout glucose
   head(data_SLAM_gluc)
-  
+
   # Checkout nmr
   head(data_SLAM_nmr)
-  
+
   # Create gluc ----------------------------------------------------------------
   # join glucose and census for dob and other infor
   gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
   # drop useless vars
   gluc <- dplyr::select(gluc, -c(
-                                 lact,
-                                 cohort,
-                                 animal_id,
-                                 tag,
-                                 taghistory,
-                                 cage,
-                                 eartag,
-                                 name,
-                                 X
-                                 )
-  )
+    lact,
+    cohort,
+    animal_id,
+    tag,
+    taghistory,
+    cage,
+    eartag,
+    name,
+    X
+  ))
   # create age for merging and format data so it makes sense
   gluc <- dplyr::mutate(gluc,
     age_wk = difftime(date, dob, units = "weeks"),
     date = as.Date(date, "%m%d%Y")
   )
-  
+
   # Create nmr -----------------------------------------------------------------
   # join nmr with census for dob and other info
   nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
   # drop useless columns
   nmr <- dplyr::select(nmr, -c(
-                               cohort,
-                               animal_id,
-                               tag,
-                               taghistory,
-                               cage,
-                               eartag,
-                               name,
-                               X
-                               )
+    cohort,
+    animal_id,
+    tag,
+    taghistory,
+    cage,
+    eartag,
+    name,
+    X
+  ))
+
+  # Use merge_difdate ---------------------------------------------------------
+  gluc_nmr <- merge_difdate(
+    data1 = gluc,
+    data2 = nmr,
+    id = "idno",
+    date = "date",
+    vars = c("bw", "lean", "fluid", "fat"),
+    threshold = c("weeks" = 20),
+    where = "both"
   )
 } else {
   message("Install dplyr to run this example")
@@ -465,17 +484,18 @@ merge_difdate <- function(data1,
     dt2 <- dt2
   } else if (!is.null(vars)) {
     vars_suf <- paste0(vars, suffixes[2])
-    complete_cases <- stats::complete.cases(dt[, vars_suf, with = FALSE])
+    complete_cases <- stats::complete.cases(dt2[, vars_suf, with = FALSE])
     dt2 <- dt2[complete_cases]
   }
 
   # merge and create dif -------------------------------------------------------
   dtm <- merge(dt1,
-               dt2,
-               by.x = id1,
-               by.y = id2,
-               all.x = TRUE,
-               allow.cartesian = TRUE)
+    dt2,
+    by.x = id1,
+    by.y = id2,
+    all.x = TRUE,
+    allow.cartesian = TRUE
+  )
 
   # dif tells use time difference and direction
   dtm$dif <- difftime(dtm[[date2]], dtm[[date1]], units = names(threshold))
@@ -502,10 +522,10 @@ merge_difdate <- function(data1,
   dt2_cols_not_date <- dt2_cols[sapply(dt2_cols, get_class) != "Date"]
   set_na_row <- which(dtm$dif_ef > threshold[[1]])
   data.table::set(dtm,
-                  i = eval(set_na_row),
-                  j = dt2_cols_not_date,
-                  value = NA
-                  )
+    i = eval(set_na_row),
+    j = dt2_cols_not_date,
+    value = NA
+  )
 
   # clean vars -----------------------------------------------------------------
   if (isTRUE(clean_vars)) {
@@ -530,12 +550,13 @@ merge_difdate <- function(data1,
     var_keep <- c(col1, col2_var_keep, "dif")
 
     dtm <- dtm[, .SD, .SDcols = var_keep]
-    names(dtm) <- c(col1_clean,
-                    col2_clean_var_keep,
-                    paste0("dif_", names(threshold)))
+    names(dtm) <- c(
+      col1_clean,
+      col2_clean_var_keep,
+      paste0("dif_", names(threshold))
+    )
   }
 
   # return as.data.frame-------------------------------------------------------
   as.data.frame(dtm)
 }
-
