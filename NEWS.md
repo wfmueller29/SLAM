@@ -1,21 +1,16 @@
-# SLAM (development version)
+# SLAM 0.2.0
 
-# SLAM 0.1.0.9001
-
-* refactored `add_delta()`, `merge_difdate()`, `merge_diftime()`
-* longplot and histoplot from Remy were added
-* `longplot()` renamed to `plot_long()`
-* `histoplot()` renamed to `plot_bar()`
-* `plot_mfreq()` added
-
-# SLAM 0.1.0.9000
-
-* Added a `NEWS.md` file to track changes to the package.
-* Added installation advice to `README.md`
-* Added authors to functions and references to datasets.
-* Added first version of `merge_difdate()`. This function was built
-on the data.table. So it should be faster than `merge_diftime()`.
-* Fixed `merge_diftime()` and `merge_difdate()` bug if two dates are provided. 
+* New Functions
+    - `plot_long()` added by Remy
+    - `plot_bar()` added by Remy
+    - `plot_mfreq()`
+* Refactored Functions
+    - `add_delta()`
+    - `merge_difdate()`
+    - `merge_diftime()`
+* Features Added
+    - `NEWS.md` 
+    - `README.md`
 
 # SLAM 0.1.0
 
