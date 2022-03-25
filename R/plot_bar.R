@@ -68,7 +68,9 @@ plot_bar <- function(data,
 
   data[[x]] <- factor(data[[x]], levels = unique(data[[x]]))
 
-  data <- data[quantile(data[[y]], percentile) < data[[y]] & data[[y]] < quantile(data[[y]], 1 - percentile), ]
+  cond1 <- stats::quantile(data[[y]], percentile) < data[[y]]
+  cond2 <- data[[y]] < stats::quantile(data[[y]], 1 - percentile)
+  data <- data[cond1 & cond2, ]
 
   # if bar_color is missing
   if (missing(bar_color)) {
@@ -77,15 +79,17 @@ plot_bar <- function(data,
 
   # creating means and standard deviations
   stats_formula <- paste(y, "~", x, "+", by)
-  stats_table.mean <- stats::aggregate(
+  stats_table_mean <- stats::aggregate(
     data = data, eval(parse(text = stats_formula)),
     FUN = function(x) mean(x)
   )
-  stats_table.sd <- stats::aggregate(
+  stats_table_sd <- stats::aggregate(
     data = data, eval(parse(text = stats_formula)),
     FUN = function(x) stats::sd(x)
   )
-  stats_table <- dplyr::left_join(stats_table.mean, stats_table.sd, by = c(x, by))
+  stats_table <- dplyr::left_join(stats_table_mean,
+                                  stats_table_sd,
+                                  by = c(x, by))
   colnames(stats_table) <- c(x, by, "means", "st_dev")
 
   # merging mean and sd stats with the dataframe
