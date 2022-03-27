@@ -32,33 +32,35 @@
 #'   head(data)
 #'
 #'   # add delta variables with 1 time lagged differences and fill with 0
-#'   data <- add_delta(data = data,
-#'                     cols = c("bw", "fat", "lean", "fluid"),
-#'                     id = "idno",
-#'                     time = "date")
+#'   data <- add_delta(
+#'     data = data,
+#'     cols = c("bw", "fat", "lean", "fluid"),
+#'     id = "idno",
+#'     time = "date"
+#'   )
 #'
 #'   # add delta variable with 2 time lagged differences and fill with 0
-#'   data <- add_delta(data = data,
-#'                     cols = c("bw", "fat", "lean", "fluid"),
-#'                     id = "idno",
-#'                     time = "date",
-#'                     n = 2)
+#'   data <- add_delta(
+#'     data = data,
+#'     cols = c("bw", "fat", "lean", "fluid"),
+#'     id = "idno",
+#'     time = "date",
+#'     n = 2
+#'   )
 #' }
-#'
-#'
 #' @export
 #'
 #' @importFrom data.table ':=' .SD
 #'
 
 add_delta <- function(data,
-                           cols,
-                           id,
-                           time,
-                           fill = 0,
-                           n = 1L,
-                           type = "lag",
-                           prefix = paste("delta", type, n, sep = "_")) {
+                      cols,
+                      id,
+                      time,
+                      fill = 0,
+                      n = 1L,
+                      type = "lag",
+                      prefix = paste("delta", type, n, sep = "_")) {
 
   # convert fill to numeric
   fill <- as.numeric(fill)
@@ -67,50 +69,16 @@ add_delta <- function(data,
 
   # loop through cols ----------------------------------------------------------
   for (col in cols) {
-    # calculate deltas for variable defined by col -----------------------------
-    # delta variable name
-    col_delta <- paste(prefix, col, sep = "_")
-    # na varialbe name
-    col_na <- paste(col, "na", sep = "_")
-
-    # data table chain ---------------------------------------------------------
-    # create col_na that is true if col is NA and false otherwise
-    data.table::set(dt,
-                    i = NULL,
-                    j = eval(col_na),
-                    value = sapply(dt[[col]], is.na)
-                    )
-    # order dt by time so that rolling differences are taken properly
-    data.table::setorderv(dt, cols = eval(time))
-    # create delta variable using n and type args specified in function call.
-    # the dt is grouped by id and col_na so that delta calculation will "skip"
-    # dates when there is NAs
-    data.table::setkeyv(dt, cols = c(id, col_na))
-    data.table::set(dt,
-                    i = NULL,
-                    j = eval(col_delta),
-                    value = dt[[col]] - data.table::shift(x = dt[[col]],
-                                                          n = n,
-                                                          fill = NA,
-                                                          type = type)
-                    )
-    # remove key
-    data.table::setkey(dt, NULL)
-    # if there are NA's in col_delta and no NAs in col, we know that the NA
-    # in col_delta is from lag window. We want to replace these NA's. However,
-    # any NA's in col_delta from due to an NA in col, we want to leave these NA.
-    replace_rows <- which(is.na(dt[[col_delta]]) & !dt[[col_na]])
-    data.table::set(dt,
-                    i = eval(replace_rows),
-                    j = eval(col_delta),
-                    value = eval(fill)
-                    )
-    # Drop the na column
-    data.table::set(dt,
-                    i = NULL,
-                    j = eval(col_na),
-                    value = NULL
-                    )
+    dt <- mutate_delta_one_col(
+      dt = dt,
+      col = col,
+      id = id,
+      time = time,
+      fill = fill,
+      n = n,
+      type = type,
+      prefix = prefix
+    )
   }
   # ----------------------------------------------------------------------------
 
@@ -121,4 +89,77 @@ add_delta <- function(data,
 
   # return data
   data
+}
+
+# This function will fill the NA's created by lagged differences given, the
+# lag column
+
+fill_lag_na <- function(dt, col_delta, col_na, fill) {
+  replace_rows <- which(is.na(dt[[col_delta]]) & !dt[[col_na]])
+
+  data.table::set(dt,
+    i = eval(replace_rows),
+    j = eval(col_delta),
+    value = eval(fill)
+  )
+
+  dt
+}
+
+# This function creates a lagged value column for a data.table determined by
+# n and type
+
+mutate_lag_skip_na <- function(dt, col, id, col_na, col_name, n, type) {
+  data.table::setkeyv(dt, cols = c(id, col_na))
+
+  data.table::set(dt,
+    i = NULL,
+    j = eval(col_name),
+    value = dt[[col]] - data.table::shift(
+      x = dt[[col]],
+      n = n,
+      fill = NA,
+      type = type
+    )
+  )
+
+  # remove key
+  data.table::setkey(dt, NULL)
+
+  dt
+}
+
+mutate_delta_one_col <- function(dt, col, id, time, fill, n, type, prefix) {
+
+  # calculate deltas for variable defined by col -----------------------------
+  # delta variable name
+  col_delta <- paste(prefix, col, sep = "_")
+  # na varialbe name
+  col_na <- paste(col, "na", sep = "_")
+
+  # data table chain ---------------------------------------------------------
+  # create col_na that is true if col is NA and false otherwise
+  data.table::set(dt,
+    i = NULL,
+    j = eval(col_na),
+    value = sapply(dt[[col]], is.na)
+  )
+
+  # order dt by time so that rolling differences are taken properly
+  data.table::setorderv(dt, cols = eval(time))
+
+  # create delta variable using n and type args specified in function call.
+  # the dt is grouped by id and col_na so that delta calculation will "skip"
+  # dates when there is NAs
+  dt <- mutate_lag_skip_na(dt, col, id, col_na, col_delta, n, type)
+
+  # if there are NA's in col_delta and no NAs in col, we know that the NA
+  # in col_delta is from lag window. We want to replace these NA's. However,
+  # any NA's in col_delta from due to an NA in col, we want to leave these NA.
+  dt <- fill_lag_na(dt, col_delta, col_na, fill)
+
+  # Drop the na column
+  data.table::set(dt, i = NULL, j = eval(col_na), value = NULL)
+
+  dt
 }
