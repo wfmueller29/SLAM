@@ -51,13 +51,13 @@
 #' # Checkout data ------------------------------------------------------------
 #' # Checkout census
 #' head(data_SLAM_census)
-#' 
+#'
 #' # Checkout glucose
 #' head(data_SLAM_gluc)
-#' 
+#'
 #' # Checkout nmr
 #' head(data_SLAM_nmr)
-#' 
+#'
 #' # Create gluc --------------------------------------------------------------
 #' # join glucose and census for dob and other infor
 #' gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
@@ -81,7 +81,7 @@
 #'   age_wk = difftime(date, dob, units = "weeks"),
 #'   date = as.Date(date, "%m%d%Y")
 #' )
-#' 
+#'
 #' # Create nmr ---------------------------------------------------------------
 #' # join nmr with census for dob and other info
 #' nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
@@ -104,7 +104,7 @@
 #'   age_wk = difftime(date, dob, units = "weeks"),
 #'   date = as.Date(date, "%m%d%Y")
 #' )
-#' 
+#'
 #' # Use merge_diftime --------------------------------------------------------
 #' gluc_nmr <- merge_diftime(
 #'   data1 = gluc,
@@ -114,7 +114,7 @@
 #'   vars = c("bw", "lean", "fluid", "fat"),
 #'   clean_vars = FALSE
 #' )
-#' 
+#'
 #' # Checkout results
 #' head(gluc_nmr)
 #' } else {
@@ -201,7 +201,7 @@ merge_diftime <- function(data1,
   }
 
   data.table::setorderv(dtm, cols = c(id1, "dif_ef"))
-  
+
   dtm <- base::unique(dtm, by = c(eval(id1), eval(age1)))
 
   # threshold
