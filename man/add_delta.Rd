@@ -54,20 +54,22 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
   head(data)
 
   # add delta variables with 1 time lagged differences and fill with 0
-  data <- add_delta(data = data,
-                    cols = c("bw", "fat", "lean", "fluid"),
-                    id = "idno",
-                    time = "date")
+  data <- add_delta(
+    data = data,
+    cols = c("bw", "fat", "lean", "fluid"),
+    id = "idno",
+    time = "date"
+  )
 
   # add delta variable with 2 time lagged differences and fill with 0
-  data <- add_delta(data = data,
-                    cols = c("bw", "fat", "lean", "fluid"),
-                    id = "idno",
-                    time = "date",
-                    n = 2)
+  data <- add_delta(
+    data = data,
+    cols = c("bw", "fat", "lean", "fluid"),
+    id = "idno",
+    time = "date",
+    n = 2
+  )
 }
-
-
 }
 \author{
 Jorge Martinez Romero, William Mueller
