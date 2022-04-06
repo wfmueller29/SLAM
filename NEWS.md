@@ -1,5 +1,12 @@
 # SLAM (development version)
 
+* Removed 4 `data_SLAM_*` datasets and replaced them with 2 simplified ones:
+`gluc` and `nmr`. These only contain cohorts 1-3 and they have both census and
+survival information to make examples shorter.
+* `add_delta()` was renamed to `mutate_delta()`
+* All examples were migrated from the Roxygen documentation to their own R
+files. 
+
 # SLAM 0.2.0
 
 * New Functions
