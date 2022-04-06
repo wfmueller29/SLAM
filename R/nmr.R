@@ -23,7 +23,6 @@
 #' @docType data
 #' @usage data(nmr)
 #' @format a dataframe 17467 obs and 6 variables
-#'
 #' \describe{
 #'   \item{idno}{unique identifier}
 #'   \item{date}{date of nmr}
@@ -34,13 +33,10 @@
 #'   \item{cohort}{cohort of the mouse}
 #'   \item{animal_id}{unique identification number for vivarium}
 #'   \item{tag}{unique identifier for each mouse}
-#'   \item{taghistory}{history of unique identifiers for each mouse, they
-#'   sometimes have changed
-#'   over the course of the study}
+#'   \item{taghistory}{history of unique identifiers for each mouse, they \
+#'   sometimes have changed over the course of the study}
 #'   \item{sex}{M or F denoting Male or Female}
 #'   \item{dob}{date variable denoting date of birth}
-#'   mouse enrolled and n
-#'   is the most recent mouse enrolled}
 #'   \item{cage}{the number denoting the cage. The mice were housed mostly in
 #'   groups of 4}
 #'   \item{eartag}{marking pattern on mouses ears so animal technicians could

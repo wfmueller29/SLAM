@@ -15,29 +15,33 @@ surv_cox(
 )
 }
 \arguments{
-\item{data}{dataframe that includes the covariates we would like to model. If your dataset is longitudinal,
-the recommendation is to use SLAM::surv_tmerge to create an interval dataframe.}
+\item{data}{dataframe that includes the covariates we would like to model.
+If your dataset is longitudinal, the recommendation is to use
+SLAM::surv_tmerge to create an interval dataframe.}
 
-\item{covariates}{on sided formula starting with "~" that provides the formula
-for the cox model. If the coefficients for your covariates are time dependent, that covariate
-should be wrapped with the tt() function, for example tt(age_wk). Then in tt argument of this function
-define the function that will time transform your variable.}
+\item{covariates}{on sided formula starting with "~" that provides the
+formula for the cox model. If the coefficients for your covariates are time
+dependent, that covariate should be wrapped with the tt() function, for
+example tt(age_wk). Then in tt argument of this function define the function
+that will time transform your variable.}
 
-\item{time}{A character string. In cross sectional data, it should be the name of the
-variable for age of observation in data. Inlongitudinal datasets created by SLAM::surv_tmerge,
-this will be "tstart"}
+\item{time}{A character string. In cross sectional data, it should be the
+name of the variable for age of observation in data. Inlongitudinal datasets
+created by SLAM::surv_tmerge, this will be "tstart"}
 
-\item{time2}{A optional character string only used when working with longitudinal datasets.
-This string provides the variable that defines theend point of interval in longitudinal datasets. If
-the dataset is created by SLAM::surv_tmerge, it would be "tstop".}
+\item{time2}{A optional character string only used when working with
+longitudinal datasets. This string provides the variable that defines theend
+point of interval in longitudinal datasets. If the dataset is created by
+SLAM::surv_tmerge, it would be "tstop".}
 
-\item{death}{A character string. in cross-sectional datasets, this is the variable that determines death censorship, where
-a natural death is 1 and a censored subject is 0. In longitudinal datasets, this variable specifies
-whether or not a subject died at the end of the interval. If your longitudinal dataset was created by
-SLAM::surv_tmerge, this would be "tstop".}
+\item{death}{A character string. in cross-sectional datasets, this is the
+variable that determines death censorship, where a natural death is 1 and a
+censored subject is 0. In longitudinal datasets, this variable specifies
+whether or not a subject died at the end of the interval. If your
+longitudinal dataset was created by SLAM::surv_tmerge, this would be "tstop".}
 
-\item{tt}{a function that defines the time transformation that will be applied when a covariate is wrapped
-with the tt(). By default tt = NULL.}
+\item{tt}{a function that defines the time transformation that will be
+applied when a covariate is wrapped with the tt(). By default tt = NULL.}
 
 \item{type}{A character string that specifies the type of censoring.}
 }
@@ -45,41 +49,29 @@ with the tt(). By default tt = NULL.}
 returns coxph object
 }
 \description{
-Function that calls Survival Object and Coxph in one function call. This function can be
-used if your dataset is cross sectional (one observation per individual) and longitudianl
-(multiple observations per individual). It can also be used if your hazard ratios are time
-independent (hazard is constant with time) or if you hazard ratios are time depedent
-(hazard changes with time).
+Function that calls Survival Object and Coxph in one function call.
+This function can be used if your dataset is cross sectional (one
+observation per individual) and longitudianl (multiple observations per
+individual). It can also be used if your hazard ratios are time
+independent (hazard is constant with time) or if you hazard ratios are time
+depedent (hazard changes with time).
 }
 \examples{
+
 # Repeated Measures (Longitudinal) Example
 # Lets see how glucose predicts mortaility in SLAM
 
 if (requireNamespace("dplyr", quietly = TRUE)) {
-  # Checkout dataframes --------------------------------------------------------
-  # Checkout census
-  head(data_SLAM_census)
-
-  # Checkout glucose
-  head(data_SLAM_gluc)
-
-  # Checkout survival data
-  head(data_SLAM_surv)
+  # Checkout glucose ---------------------------------------------------------
+  head(gluc)
 
   # Create dataframe with everything -------------------------------------------
-  # drop lactate to simplify
-  main <- dplyr::select(data_SLAM_gluc, -lact)
-  # obtain census info for dob
-  main <- dplyr::left_join(main, data_SLAM_census, by = "idno")
-  # obtain survival info for dod
-  main <- dplyr::left_join(main, data_SLAM_surv, by = "tag")
   # filter mice without date of death
-  main <- dplyr::filter(main, !is.na(died))
+  main <- dplyr::filter(gluc, !is.na(died))
   # create age, age of death, and difference between age and age of death
   main <- dplyr::mutate(main,
     age_wk = as.numeric(difftime(date, dob, units = "weeks")),
     age_wk_death = as.numeric(difftime(died, dob, units = "weeks")),
-    dif = age_wk_death - age_wk
   )
   # filter mice measured after death because tmerge will throw error
   main <- dplyr::filter(main, age_wk <= age_wk_death)

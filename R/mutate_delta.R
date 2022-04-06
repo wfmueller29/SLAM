@@ -1,4 +1,4 @@
-#' Add delta variable
+#' Mutate delta variable
 #'
 #' This function will create a delta variable given a subject id, variable name
 #' and dataframe. It will also skip NA values in the calculation of the delta.
@@ -18,42 +18,14 @@
 #'
 #' @author Jorge Martinez Romero, William Mueller
 #'
-#' @examples
+#' @example R\examples\mutate_delta.R
 #'
-#' # Example ------------------------------------------------------------------
-#'
-#' # dplyr must be in NAMESPACE
-#' if (requireNamespace("dplyr", quietly = TRUE)) {
-#'
-#'   # merge nmr with SLAM census
-#'   data <- dplyr::left_join(nmr, census, by = "idno")
-#'
-#'   # checkout data
-#'   head(data)
-#'
-#'   # add delta variables with 1 time lagged differences and fill with 0
-#'   data <- add_delta(
-#'     data = data,
-#'     cols = c("bw", "fat", "lean", "fluid"),
-#'     id = "idno",
-#'     time = "date"
-#'   )
-#'
-#'   # add delta variable with 2 time lagged differences and fill with 0
-#'   data <- add_delta(
-#'     data = data,
-#'     cols = c("bw", "fat", "lean", "fluid"),
-#'     id = "idno",
-#'     time = "date",
-#'     n = 2
-#'   )
-#' }
 #' @export
 #'
 #' @importFrom data.table ':=' .SD
 #'
 
-add_delta <- function(data,
+mutate_delta <- function(data,
                       cols,
                       id,
                       time,

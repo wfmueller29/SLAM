@@ -70,82 +70,44 @@ it to missing.
 }
 \examples{
 
-# Example Merging clostest NMR to Glucose ----------------------------------
+# Merging clostest NMR to Glucose ---------------------------------------------
 
 if (requireNamespace("dplyr", quietly = TRUE)) {
-# Checkout data ------------------------------------------------------------
-# Checkout census
-head(data_SLAM_census)
+  # Checkout data ------------------------------------------------------------
+  # Checkout glucose
+  head(gluc)
 
-# Checkout glucose
-head(data_SLAM_gluc)
+  # Checkout nmr
+  head(nmr)
 
-# Checkout nmr
-head(data_SLAM_nmr)
-
-# Create gluc --------------------------------------------------------------
-# join glucose and census for dob and other infor
-gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
-# drop useless vars
-gluc <- dplyr::select(
-  gluc,
-  -c(
-    lact,
-    cohort,
-    animal_id,
-    tag,
-    taghistory,
-    cage,
-    eartag,
-    name,
-    X
+  # create age for merging and format data so it makes sense
+  gluc <- dplyr::mutate(gluc,
+    age_wk = difftime(date, dob, units = "weeks"),
+    date = as.Date(date, "\%m\%d\%Y")
   )
-)
-# create age for merging and format data so it makes sense
-gluc <- dplyr::mutate(gluc,
-  age_wk = difftime(date, dob, units = "weeks"),
-  date = as.Date(date, "\%m\%d\%Y")
-)
 
-# Create nmr ---------------------------------------------------------------
-# join nmr with census for dob and other info
-nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
-# drop useless columns
-nmr <- dplyr::select(
-  nmr,
-  -c(
-    cohort,
-    animal_id,
-    tag,
-    taghistory,
-    cage,
-    eartag,
-    name,
-    X
+  # Create nmr ---------------------------------------------------------------
+  # create age for merging and format data so it makes sense
+  nmr <- dplyr::mutate(nmr,
+    age_wk = difftime(date, dob, units = "weeks"),
+    date = as.Date(date, "\%m\%d\%Y")
   )
-)
-# create age for merging and format data so it makes sense
-nmr <- dplyr::mutate(nmr,
-  age_wk = difftime(date, dob, units = "weeks"),
-  date = as.Date(date, "\%m\%d\%Y")
-)
 
-# Use merge_diftime --------------------------------------------------------
-gluc_nmr <- merge_diftime(
-  data1 = gluc,
-  data2 = nmr,
-  id = "idno",
-  age = "age_wk",
-  vars = c("bw", "lean", "fluid", "fat"),
-  clean_vars = FALSE
-)
+  # Use merge_diftime --------------------------------------------------------
+  gluc_nmr <- merge_diftime(
+    data1 = gluc,
+    data2 = nmr,
+    id = "idno",
+    age = "age_wk",
+    vars = c("bw", "lean", "fluid", "fat"),
+    clean_vars = TRUE
+  )
 
-# Checkout results
-head(gluc_nmr)
+  # Checkout results
+  head(gluc_nmr)
 } else {
   message("Install dplyr to run this example")
 }
-
 }
 \author{
 William Mueller, Jorge Martinez Romero

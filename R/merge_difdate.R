@@ -43,6 +43,8 @@
 #' in data1 is matched with the closest dated measurement for that subject in
 #' data2.
 #'
+#' @example R\examples\merge_difdate.R
+#'
 #' @author William Mueller, Jorge Martinez Romero
 #'
 #' @export

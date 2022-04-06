@@ -22,42 +22,29 @@ A death is represented by 1 and censorship is represented by 0}
 at each timepoint}
 }
 \value{
-outputs dataframe with tstart, tstop, death that can be used for time
-dependent survival analysis
+outputs dataframe with tstart, tstop, death that can be used for
+time dependent survival analysis
 }
 \description{
 This will take data in long form and create a tmerge dataframe
 that can be used in time dependent survival analysis
 }
 \examples{
+
 # Repeated Measures (Longitudinal) Example
 # Lets see how glucose predicts mortaility in SLAM
 
 if (requireNamespace("dplyr", quietly = TRUE)) {
-  # Checkout dataframes --------------------------------------------------------
-  # Checkout census
-  head(data_SLAM_census)
-
-  # Checkout glucose
-  head(data_SLAM_gluc)
-
-  # Checkout survival data
-  head(data_SLAM_surv)
+  # Checkout glucose ---------------------------------------------------------
+  head(gluc)
 
   # Create dataframe with everything -------------------------------------------
-  # drop lactate to simplify
-  main <- dplyr::select(data_SLAM_gluc, -lact)
-  # obtain census info for dob
-  main <- dplyr::left_join(main, data_SLAM_census, by = "idno")
-  # obtain survival info for dod
-  main <- dplyr::left_join(main, data_SLAM_surv, by = "tag")
   # filter mice without date of death
-  main <- dplyr::filter(main, !is.na(died))
+  main <- dplyr::filter(gluc, !is.na(died))
   # create age, age of death, and difference between age and age of death
   main <- dplyr::mutate(main,
     age_wk = as.numeric(difftime(date, dob, units = "weeks")),
     age_wk_death = as.numeric(difftime(died, dob, units = "weeks")),
-    dif = age_wk_death - age_wk
   )
   # filter mice measured after death because tmerge will throw error
   main <- dplyr::filter(main, age_wk <= age_wk_death)
@@ -116,7 +103,6 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 } else {
   print("Install dplyr to run this example")
 }
-
 }
 \seealso{
 \link[survival]{tmerge}
