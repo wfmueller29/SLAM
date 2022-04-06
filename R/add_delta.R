@@ -26,7 +26,7 @@
 #' if (requireNamespace("dplyr", quietly = TRUE)) {
 #'
 #'   # merge nmr with SLAM census
-#'   data <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+#'   data <- dplyr::left_join(nmr, census, by = "idno")
 #'
 #'   # checkout data
 #'   head(data)

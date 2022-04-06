@@ -8,17 +8,17 @@ library(dplyr)
 if (requireNamespace("dplyr", quietly = TRUE)) {
   # Checkout data --------------------------------------------------------------
   # Checkout census
-  head(data_SLAM_census)
+  head(census)
 
   # Checkout glucose
-  head(data_SLAM_gluc)
+  head(gluc)
 
   # Checkout nmr
-  head(data_SLAM_nmr)
+  head(nmr)
 
   # Create gluc ----------------------------------------------------------------
   # join glucose and census for dob and other infor
-  gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
+  gluc <- dplyr::left_join(gluc, census, by = "idno")
   # drop useless vars
   gluc <- dplyr::select(
     gluc,
@@ -42,7 +42,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 
   # Create nmr -----------------------------------------------------------------
   # join nmr with census for dob and other info
-  nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+  nmr <- dplyr::left_join(nmr, census, by = "idno")
   # drop useless columns
   nmr <- dplyr::select(
     nmr,
@@ -220,8 +220,8 @@ merge_diftime <- function(data1,
 
 ## ----add_delta----------------------------------------------------------------
 # test ---------------------------------
-data <- data_SLAM_nmr %>%
-  dplyr::left_join(data_SLAM_census, by = "idno")
+data <- nmr %>%
+  dplyr::left_join(census, by = "idno")
 
 data <- data[data$cohort %in% c(1, 2, 3, 4, 5, 6), ]
 cols <- c("bw", "fat")
@@ -320,7 +320,7 @@ data <- add_delta(
 if (requireNamespace("dplyr", quietly = TRUE)) {
 
   # merge nmr with SLAM census
-  data <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+  data <- dplyr::left_join(nmr, census, by = "idno")
 
   # checkout data
   head(data)
@@ -353,17 +353,17 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 if (requireNamespace("dplyr", quietly = TRUE)) {
   # Checkout data --------------------------------------------------------------
   # Checkout census
-  head(data_SLAM_census)
+  head(census)
 
   # Checkout glucose
-  head(data_SLAM_gluc)
+  head(gluc)
 
   # Checkout nmr
-  head(data_SLAM_nmr)
+  head(nmr)
 
   # Create gluc ----------------------------------------------------------------
   # join glucose and census for dob and other infor
-  gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
+  gluc <- dplyr::left_join(gluc, census, by = "idno")
   # drop useless vars
   gluc <- dplyr::select(gluc, -c(
     lact,
@@ -384,7 +384,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 
   # Create nmr -----------------------------------------------------------------
   # join nmr with census for dob and other info
-  nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+  nmr <- dplyr::left_join(nmr, census, by = "idno")
   # drop useless columns
   nmr <- dplyr::select(nmr, -c(
     cohort,

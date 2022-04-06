@@ -50,17 +50,17 @@
 #' if (requireNamespace("dplyr", quietly = TRUE)) {
 #' # Checkout data ------------------------------------------------------------
 #' # Checkout census
-#' head(data_SLAM_census)
+#' head(census)
 #'
 #' # Checkout glucose
-#' head(data_SLAM_gluc)
+#' head(gluc)
 #'
 #' # Checkout nmr
-#' head(data_SLAM_nmr)
+#' head(nmr)
 #'
 #' # Create gluc --------------------------------------------------------------
 #' # join glucose and census for dob and other infor
-#' gluc <- dplyr::left_join(data_SLAM_gluc, data_SLAM_census, by = "idno")
+#' gluc <- dplyr::left_join(gluc, census, by = "idno")
 #' # drop useless vars
 #' gluc <- dplyr::select(
 #'   gluc,
@@ -84,7 +84,7 @@
 #'
 #' # Create nmr ---------------------------------------------------------------
 #' # join nmr with census for dob and other info
-#' nmr <- dplyr::left_join(data_SLAM_nmr, data_SLAM_census, by = "idno")
+#' nmr <- dplyr::left_join(nmr, census, by = "idno")
 #' # drop useless columns
 #' nmr <- dplyr::select(
 #'   nmr,

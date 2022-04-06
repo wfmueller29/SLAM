@@ -1,5 +1,10 @@
 library(dplyr)
-data_SLAM_surv <- read.csv("data-raw/Survival.csv") %>%
+
+census <- read.csv("data-raw/census.csv") %>%
+  rename(animal_id = Animal_ID) %>%
+  mutate(dob = as.Date(dob, format = "%m/%d/%Y"))
+
+surv <- read.csv("data-raw/Survival.csv") %>%
   rename(cod = CoD) %>%
   mutate(died = as.Date(Died, "%m/%d/%Y")) %>%
   select(-Died) %>%
@@ -13,12 +18,8 @@ data_SLAM_surv <- read.csv("data-raw/Survival.csv") %>%
         )
       )
     )
-  ))
+  )) %>%
+  select(-X)
 
-
-str(data_SLAM_surv)
-unique(data_SLAM_surv$cod)
-apply(apply(data_SLAM_surv, 2, is.na), 2, sum)
-
-
-usethis::use_data(data_SLAM_surv, overwrite = TRUE)
+census_surv <- census %>%
+  left_join(surv, by = "tag")

@@ -36,21 +36,21 @@
 #' if (requireNamespace("dplyr", quietly = TRUE)) {
 #'   # Checkout dataframes --------------------------------------------------------
 #'   # Checkout census
-#'   head(data_SLAM_census)
+#'   head(census)
 #'
 #'   # Checkout glucose
-#'   head(data_SLAM_gluc)
+#'   head(gluc)
 #'
 #'   # Checkout survival data
-#'   head(data_SLAM_surv)
+#'   head(surv)
 #'
 #'   # Create dataframe with everything -------------------------------------------
 #'   # drop lactate to simplify
-#'   main <- dplyr::select(data_SLAM_gluc, -lact)
+#'   main <- dplyr::select(gluc, -lact)
 #'   # obtain census info for dob
-#'   main <- dplyr::left_join(main, data_SLAM_census, by = "idno")
+#'   main <- dplyr::left_join(main, census, by = "idno")
 #'   # obtain survival info for dod
-#'   main <- dplyr::left_join(main, data_SLAM_surv, by = "tag")
+#'   main <- dplyr::left_join(main, surv, by = "tag")
 #'   # filter mice without date of death
 #'   main <- dplyr::filter(main, !is.na(died))
 #'   # create age, age of death, and difference between age and age of death
