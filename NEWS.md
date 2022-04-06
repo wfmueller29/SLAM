@@ -1,3 +1,5 @@
+# SLAM (development version)
+
 # SLAM 0.2.0
 
 * New Functions
