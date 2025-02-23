@@ -7,7 +7,7 @@
 #' @param id character string specifying subject in data
 #' @param age character string specifying age in data
 #' @param age_death character string specifiying age of death in data
-#' @param death_censor character string specifying censor in data.
+#' @param dead_censor character string specifying censor in data.
 #' A death is represented by 1 and censorship is represented by 0
 #' @param outcomes vector or list of strings specifying the outcome variables
 #' at each timepoint
@@ -24,7 +24,7 @@
 #' @export
 
 
-surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes) {
+surv_tmerge <- function(data, id, age, age_death, dead_censor, outcomes) {
   # Create baseline data -------------------------------------------------------
 
   # Reoder Dataset by Id and Age
@@ -37,7 +37,7 @@ surv_tmerge <- function(data, id, age, age_death, death_censor, outcomes) {
 
   # First tmerge ---------------------------------------------------------------
   # Create call for first tmerge
-  event <- call("event", as.symbol(age_death), as.symbol(death_censor))
+  event <- call("event", as.symbol(age_death), as.symbol(dead_censor))
   cl_tmerge1 <- rlang::call2("tmerge",
     data1 = as.symbol("data_baseline"),
     data2 = as.symbol("data_baseline"),

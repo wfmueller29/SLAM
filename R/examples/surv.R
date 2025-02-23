@@ -34,7 +34,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
     id = "idno",
     age = "age_wk",
     age_death = "age_wk_death",
-    death_censor = "dead_censor",
+    dead_censor = "dead_censor",
     outcomes = c("gluc")
   )
 
