@@ -41,18 +41,39 @@
 #'
 #' @export
 
-surv_cox <- function(data, covariates, time, time2 = NULL, death, tt = NULL, type = c("right", "left", "interval", "counting", "interval2", "mstate")) {
+surv_cox <- function(data,
+                     covariates,
+                     time,
+                     time2 = NULL,
+                     death,
+                     tt = NULL,
+                     type = c(
+                       "right",
+                       "left",
+                       "interval",
+                       "counting",
+                       "interval2",
+                       "mstate"
+                     )) {
   if (is.null(time2)) {
-    surv_object <- survival::Surv(time = data[[time]], event = data[[death]], type = type)
+    surv_object <- survival::Surv(
+      time = data[[time]],
+      event = data[[death]],
+      type = type
+    )
   } else {
-    surv_object <- survival::Surv(time = data[[time]], time2 = data[[time2]], event = data[[death]])
+    surv_object <- survival::Surv(
+      time = data[[time]],
+      time2 = data[[time2]],
+      event = data[[death]]
+    )
   }
-  cox.form <- stats::as.formula(paste0("surv_object", deparse(covariates)))
+  cox_form <- stats::as.formula(paste0("surv_object", deparse(covariates)))
 
   if (is.null(tt)) {
-    fit <- survival::coxph(cox.form, data = data)
+    fit <- survival::coxph(cox_form, data = data)
   } else {
-    fit <- survival::coxph(cox.form, data = data, tt = tt)
+    fit <- survival::coxph(cox_form, data = data, tt = tt)
   }
   return(fit)
 }
