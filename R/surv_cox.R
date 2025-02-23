@@ -68,7 +68,7 @@ surv_cox <- function(data,
       event = data[[death]]
     )
   }
-  cox_form <- stats::as.formula(paste0("surv_object", deparse(covariates)))
+  cox_form <- stats::as.formula(paste0("surv_object", deparse1(covariates)))
 
   if (is.null(tt)) {
     fit <- survival::coxph(cox_form, data = data)
