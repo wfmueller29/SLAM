@@ -72,8 +72,11 @@ surv_cox <- function(data,
 
   if (is.null(tt)) {
     fit <- survival::coxph(cox_form, data = data)
+    fit$call <- call("survival::coxph", cox_form, as.symbol("data"))
   } else {
     fit <- survival::coxph(cox_form, data = data, tt = tt)
+    fit$call <- call("survival::coxph", cox_form, as.symbol("data"), tt = tt)
   }
+
   return(fit)
 }
