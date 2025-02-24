@@ -72,14 +72,18 @@ surv_cox <- function(data,
 
   if (is.null(tt)) {
     fit <- survival::coxph(cox_form, data = data)
-    fit$call <- rlang::call2(
-      "coxph", as.formula(cox_form), as.symbol("data"), .ns = "survival"
+    namespace_call <- call("::", "coxph", "survival")
+    fit$call <- call(namespace_call,
+      formula = cox_form,
+      data = as.symbol("data")
     )
   } else {
     fit <- survival::coxph(cox_form, data = data, tt = tt)
-    fit$call <- rlang::call2("coxph",
-      as.formula(cox_form), as.symbol("data"),
-      tt = tt, .ns = "survival"
+    namespace_call <- call("::", "coxph", "survival")
+    fit$call <- call(namespace_call,
+      formula = cox_form,
+      data = as.symbol("data"),
+      tt = tt
     )
   }
 
