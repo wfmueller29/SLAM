@@ -27,6 +27,11 @@
 #' censored subject is 0. In longitudinal datasets, this variable specifies
 #' whether or not a subject died at the end of the interval. If your
 #' longitudinal dataset was created by SLAM::surv_tmerge, this would be "tstop".
+#' @param id optional variable that identifies subjects. Only necessary
+#' when a subject can have multiple rows in the data, and there is
+#' more than one event type.  This variable will normally be found
+#' in ‘data’. However, it appears that the survival packge has not yet
+#' gotten this subject based cox model to work
 #' @param tt a function that defines the time transformation that will be
 #' applied when a covariate is wrapped with the tt(). By default tt = NULL.
 #' @param type A character string that specifies the type of censoring.
@@ -46,6 +51,7 @@ surv_cox <- function(data,
                      time,
                      time2 = NULL,
                      death,
+                     id = NULL,
                      tt = NULL,
                      type = c(
                        "right",
@@ -71,20 +77,40 @@ surv_cox <- function(data,
   cox_form <- stats::as.formula(paste0("surv_object", deparse1(covariates)))
 
   if (is.null(tt)) {
-    fit <- survival::coxph(cox_form, data = data)
     namespace_call <- call("::", as.symbol("coxph"), as.symbol("survival"))
-    fit$call <- as.call(list(namespace_call,
-      formula = cox_form,
-      data = as.symbol("data"))
-    )
+    if (!is.null(id)) {
+      data[[id]] <- as.factor(data[[id]])
+      fit <- survival::coxph(cox_form, data = data, id = id)
+      fit$call <- as.call(list(namespace_call,
+        formula = cox_form,
+        data = as.symbol("data"),
+        id = id
+      ))
+    } else {
+      fit <- survival::coxph(cox_form, data = data)
+      fit$call <- as.call(list(namespace_call,
+        formula = cox_form,
+        data = as.symbol("data")
+      ))
+    }
   } else {
-    fit <- survival::coxph(cox_form, data = data, tt = tt)
     namespace_call <- call("::", as.symbol("coxph"), as.symbol("survival"))
-    fit$call <- as.call(list(namespace_call,
-      formula = cox_form,
-      data = as.symbol("data"),
-      tt = tt
-    ))
+    if (!is.null(id)) {
+      fit <- survival::coxph(cox_form, data = data, tt = tt, id = id)
+      fit$call <- as.call(list(namespace_call,
+        formula = cox_form,
+        data = as.symbol("data"),
+        id = id,
+        tt = tt
+      ))
+    } else {
+      fit <- survival::coxph(cox_form, data = data, tt = tt)
+      fit$call <- as.call(list(namespace_call,
+        formula = cox_form,
+        data = as.symbol("data"),
+        tt = tt
+      ))
+    }
   }
 
   return(fit)
