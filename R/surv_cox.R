@@ -76,42 +76,11 @@ surv_cox <- function(data,
   }
   cox_form <- stats::as.formula(paste0("surv_object", deparse1(covariates)))
 
-  if (is.null(tt)) {
-    namespace_call <- call("::", as.symbol("coxph"), as.symbol("survival"))
-    if (!is.null(id)) {
-      data[[id]] <- as.factor(data[[id]])
-      fit <- survival::coxph(cox_form, data = data, id = id)
-      fit$call <- as.call(list(namespace_call,
-        formula = cox_form,
-        data = as.symbol("data"),
-        id = id
-      ))
-    } else {
-      fit <- survival::coxph(cox_form, data = data)
-      fit$call <- as.call(list(namespace_call,
-        formula = cox_form,
-        data = as.symbol("data")
-      ))
-    }
-  } else {
-    namespace_call <- call("::", as.symbol("coxph"), as.symbol("survival"))
-    if (!is.null(id)) {
-      fit <- survival::coxph(cox_form, data = data, tt = tt, id = id)
-      fit$call <- as.call(list(namespace_call,
-        formula = cox_form,
-        data = as.symbol("data"),
-        id = id,
-        tt = tt
-      ))
-    } else {
-      fit <- survival::coxph(cox_form, data = data, tt = tt)
-      fit$call <- as.call(list(namespace_call,
-        formula = cox_form,
-        data = as.symbol("data"),
-        tt = tt
-      ))
-    }
-  }
+  namespace_call <- call("::", as.symbol("survival"), as.symbol("coxph"))
+  args <- list(formula = cox_form, data = as.symbol("data"), id = id, id = tt)
+  args <- args[!unlist(lapply(args, is.null))]
+  call <- as.call(c(namespace_call, args))
+  fit <- eval(call)
 
   return(fit)
 }
