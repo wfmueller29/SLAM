@@ -40,34 +40,6 @@ The column name for the new delta column will be "prefix_oldname"}
 This function will create a delta variable given a subject id, variable name
 and dataframe. It will also skip NA values in the calculation of the delta.
 }
-\examples{
-
- # Example ------------------------------------------------------------------
-
- # dplyr must be in NAMESPACE
- if (requireNamespace("dplyr", quietly = TRUE)) {
-
-   # checkout data
-   head(nmr)
-
-   # add delta variables with 1 time lagged differences and fill with 0
-   nmr  <- mutate_delta(
-     data = nmr,
-     cols = c("bw", "fat", "lean", "fluid"),
-     id = "idno",
-     time = "date"
-   )
-
-   # add delta variable with 2 time lagged differences and fill with 0
-   nmr <- mutate_delta(
-     data = nmr,
-     cols = c("bw", "fat", "lean", "fluid"),
-     id = "idno",
-     time = "date",
-     n = 2
-   )
- }
-}
 \author{
 Jorge Martinez Romero, William Mueller
 }
